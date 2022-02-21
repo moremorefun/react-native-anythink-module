@@ -16,4 +16,8 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm}"
 
   s.dependency "React-Core"
+  s.dependency 'AnyThinkiOS','5.8.12'
+  s.dependency 'AnyThinkiOS/AnyThinkTTAdapter','5.8.12'
+  s.dependency 'AnyThinkiOS/AnyThinkGDTAdapter','5.8.12'
+  s.dependency 'AnyThinkiOS/AnyThinkBaiduAdapter','5.8.12'
 end

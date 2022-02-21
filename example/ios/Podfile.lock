@@ -1,4 +1,24 @@
 PODS:
+  - Ads-CN-Beta (4.2.5.2):
+    - Ads-CN-Beta/BUAdSDK (= 4.2.5.2)
+  - Ads-CN-Beta/BUAdSDK (4.2.5.2):
+    - Ads-CN-Beta/BUFoundation
+    - Ads-CN-Beta/Domestic
+  - Ads-CN-Beta/BUFoundation (4.2.5.2)
+  - Ads-CN-Beta/Domestic (4.2.5.2)
+  - AnyThinkiOS (5.8.12):
+    - AnyThinkiOS/AnyThinkSDK (= 5.8.12)
+  - AnyThinkiOS/AnyThinkBaiduAdapter (5.8.12):
+    - AnyThinkiOS/AnyThinkSDK
+    - BaiduMobAdSDK (= 4.843)
+  - AnyThinkiOS/AnyThinkGDTAdapter (5.8.12):
+    - AnyThinkiOS/AnyThinkSDK
+    - GDTMobSDK (= 4.13.41)
+  - AnyThinkiOS/AnyThinkSDK (5.8.12)
+  - AnyThinkiOS/AnyThinkTTAdapter (5.8.12):
+    - Ads-CN-Beta (= 4.2.5.2)
+    - AnyThinkiOS/AnyThinkSDK
+  - BaiduMobAdSDK (4.843)
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -71,6 +91,9 @@ PODS:
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
+  - GDTMobSDK (4.13.41):
+    - GDTMobSDK/GDTMobSDK (= 4.13.41)
+  - GDTMobSDK/GDTMobSDK (4.13.41)
   - glog (0.3.5)
   - hermes-engine (0.9.0)
   - libevent (2.1.12)
@@ -290,6 +313,12 @@ PODS:
   - React-jsinspector (0.67.2)
   - React-logger (0.67.2):
     - glog
+  - react-native-anythink-module (0.1.0):
+    - AnyThinkiOS (= 5.8.12)
+    - AnyThinkiOS/AnyThinkBaiduAdapter (= 5.8.12)
+    - AnyThinkiOS/AnyThinkGDTAdapter (= 5.8.12)
+    - AnyThinkiOS/AnyThinkTTAdapter (= 5.8.12)
+    - React-Core
   - React-perflogger (0.67.2)
   - React-RCTActionSheet (0.67.2):
     - React-Core/RCTActionSheetHeaders (= 0.67.2)
@@ -404,6 +433,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-anythink-module (from `../..`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -419,7 +449,10 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  trunk:
+  https://github.com/CocoaPods/Specs.git:
+    - Ads-CN-Beta
+    - AnyThinkiOS
+    - BaiduMobAdSDK
     - CocoaAsyncSocket
     - Flipper
     - Flipper-Boost-iOSX
@@ -431,6 +464,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - GDTMobSDK
     - hermes-engine
     - libevent
     - OpenSSL-Universal
@@ -473,6 +507,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-anythink-module:
+    :path: "../.."
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -501,6 +537,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  Ads-CN-Beta: 1f45258883547e0d1377f674753432a4e71199b9
+  AnyThinkiOS: d0ce39b37b59a529c977ac33eb4efa03af08a0a6
+  BaiduMobAdSDK: 2593c30f6cc4b6fee187630135c9b56436b109fd
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
@@ -516,6 +555,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: d8d346844eca5d9120c17d441a2f38596e8ed2b9
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
+  GDTMobSDK: 1fef5d6147cca39a24a8b3925661bfc4c5b71608
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
@@ -533,6 +573,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 52beb652bbc61201bd70cbe4f0b8edb607e8da4f
   React-jsinspector: 595f76eba2176ebd8817a1fffd47b84fbdab9383
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
+  react-native-anythink-module: 889ff800ebd5297e9b4d09f20b1e8696684f99e8
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
   React-RCTActionSheet: 052606483045a408693aa7e864410b4a052f541a
   React-RCTAnimation: 08d4cac13222bb1348c687a0158dfd3b577cdb63
@@ -548,6 +589,6 @@ SPEC CHECKSUMS:
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e7c8b09ae882f6b3bab917e55a1df0991f446100
+PODFILE CHECKSUM: 7aaac41e8a78cfae98f68c55ea8bf6d5a5335060
 
 COCOAPODS: 1.11.2
