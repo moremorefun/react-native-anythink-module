@@ -10,6 +10,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import android.webkit.WebView;
+import android.os.Build;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -45,6 +47,14 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+
+    //Android 9及以上必须设置
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        String processName = getProcessName();
+        if (!getPackageName().equals(processName)) {
+            WebView.setDataDirectorySuffix(processName);
+        }
+    }
   }
 
   /**
