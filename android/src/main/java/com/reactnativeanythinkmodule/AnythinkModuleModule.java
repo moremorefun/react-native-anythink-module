@@ -22,6 +22,9 @@ import com.anythink.interstitial.api.ATInterstitialAutoLoadListener;
 import com.anythink.rewardvideo.api.ATRewardVideoAutoAd;
 import com.anythink.rewardvideo.api.ATRewardVideoAutoEventListener;
 import com.anythink.rewardvideo.api.ATRewardVideoAutoLoadListener;
+import com.anythink.splashad.api.ATSplashAd;
+import com.anythink.splashad.api.ATSplashAdListener;
+import com.anythink.splashad.api.IATSplashEyeAd;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -44,6 +47,7 @@ import java.util.Map;
 @ReactModule(name = AnythinkModuleModule.NAME)
 public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public static final String NAME = "AnythinkModule";
+  private static final HashMap<String, ATSplashAd> aTSplashAdMap = new HashMap<>();
   private static final HashMap<String, ATBannerView> aTBannerViewMap = new HashMap<>();
 
   public AnythinkModuleModule(ReactApplicationContext reactContext) {
@@ -558,6 +562,176 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void ATSplashAdInit(String placementId, int fetchAdTimeout, String defaultAdSourceConfig) {
+    ATSplashAd helper;
+
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      helper = new ATSplashAd(
+        AnythinkModuleModule.this.getReactApplicationContext(),
+        placementId,
+        new ATSplashAdListener() {
+          @Override
+          public void onAdLoaded(boolean isTimeout) {
+            WritableMap writableMap = Arguments.createMap();
+            writableMap.putString("placementId", placementId);
+            writableMap.putBoolean("isTimeout", isTimeout);
+            AnythinkModuleModule.this.
+              getReactApplicationContext().
+              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+              "onAdLoaded",
+              writableMap
+            );
+          }
+
+          @Override
+          public void onAdLoadTimeout() {
+            WritableMap writableMap = Arguments.createMap();
+            writableMap.putString("placementId", placementId);
+            AnythinkModuleModule.this.
+              getReactApplicationContext().
+              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+              "onAdLoadTimeout",
+              writableMap
+            );
+          }
+
+          @Override
+          public void onNoAdError(AdError adError) {
+            WritableMap writableMap = Arguments.createMap();
+            writableMap.putString("placementId", placementId);
+            writableMap.putString("adError", adError.toString());
+            AnythinkModuleModule.this.
+              getReactApplicationContext().
+              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+              "onNoAdError",
+              writableMap
+            );
+          }
+
+          @Override
+          public void onAdShow(ATAdInfo atAdInfo) {
+            WritableMap writableMap = Arguments.createMap();
+            writableMap.putString("placementId", placementId);
+            writableMap.putString("atAdInfo", atAdInfo.toString());
+            AnythinkModuleModule.this.
+              getReactApplicationContext().
+              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+              "onAdShow",
+              writableMap
+            );
+          }
+
+          @Override
+          public void onAdClick(ATAdInfo atAdInfo) {
+            WritableMap writableMap = Arguments.createMap();
+            writableMap.putString("placementId", placementId);
+            writableMap.putString("atAdInfo", atAdInfo.toString());
+            AnythinkModuleModule.this.
+              getReactApplicationContext().
+              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+              "onAdClick",
+              writableMap
+            );
+          }
+
+          @Override
+          public void onAdDismiss(ATAdInfo atAdInfo, IATSplashEyeAd iatSplashEyeAd) {
+            WritableMap writableMap = Arguments.createMap();
+            writableMap.putString("placementId", placementId);
+            writableMap.putString("atAdInfo", atAdInfo.toString());
+            writableMap.putString("iatSplashEyeAd", iatSplashEyeAd.toString());
+            AnythinkModuleModule.this.
+              getReactApplicationContext().
+              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+              "onAdDismiss",
+              writableMap
+            );
+          }
+        },
+        fetchAdTimeout,
+        defaultAdSourceConfig
+        );
+      aTSplashAdMap.put(placementId, helper);
+    }
+  }
+
+  @ReactMethod
+  public void ATSplashAdSetLocalExtra(String placementId, String localExtra) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    assert ad != null;
+    ad.setLocalExtra(getMap(localExtra));
+  }
+
+  @ReactMethod
+  public void ATSplashAdIsAdReady(String placementId, Promise promise) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    assert ad != null;
+    boolean b = ad.isAdReady();
+    promise.resolve(b);
+  }
+
+  @ReactMethod
+  public void ATSplashAdCheckAdStatus(String placementId, Promise promise) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    assert ad != null;
+    ATAdStatusInfo info = ad.checkAdStatus();
+    WritableMap writableMap = Arguments.createMap();
+    writableMap.putBoolean("isLoading", info.isLoading());
+    writableMap.putBoolean("isReady", info.isReady());
+    writableMap.putString("adInfo", info.getATTopAdInfo().toString());
+    promise.resolve(writableMap);
+  }
+
+  @ReactMethod
+  public void ATSplashAdLoadAd(String placementId) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    assert ad != null;
+    ad.loadAd();
+  }
+
+  @ReactMethod
+  public void ATSplashAdShow(String placementId, String position) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    assert ad != null;
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        int width = 0;
+        int height = 0;
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+        FrameLayout view = new FrameLayout(AnythinkModuleModule.this.getReactApplicationContext());
+        AnythinkModuleModule.this.getCurrentActivity().addContentView(view, layoutParams);
+        ad.show(AnythinkModuleModule.this.getCurrentActivity(), view);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void ATSplashAdCheckSplashDefaultConfigList(String placementId) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    assert ad != null;
+    ATSplashAd.checkSplashDefaultConfigList(this.getReactApplicationContext(), placementId, null);
+  }
+
+  @ReactMethod
   public void ATBannerViewInit(String placementId) {
     ATBannerView helper;
 
@@ -664,7 +838,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
     assert ad != null;
-    ad.setLocalExtra( getMap(localExtra));
+    ad.setLocalExtra(getMap(localExtra));
   }
 
   @ReactMethod
@@ -686,7 +860,6 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
     assert ad != null;
     ad.destroy();
   }
-
 
   @ReactMethod
   public void ATBannerViewCheckAdStatus(String placementId, Promise promise) {
@@ -713,22 +886,22 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-          int width = 0;
-          int height = 0;
-          if (mBannerView.getLayoutParams() != null) {
-            width = mBannerView.getLayoutParams().width;
-            height = mBannerView.getLayoutParams().height;
-          }
-          FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
-          if ("top".equals(position)) {
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
-          } else {
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-          }
-          if (mBannerView.getParent() != null) {
-            ((ViewGroup) mBannerView.getParent()).removeView(mBannerView);
-          }
-          AnythinkModuleModule.this.getCurrentActivity().addContentView(mBannerView, layoutParams);
+        int width = 0;
+        int height = 0;
+        if (mBannerView.getLayoutParams() != null) {
+          width = mBannerView.getLayoutParams().width;
+          height = mBannerView.getLayoutParams().height;
+        }
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+        if ("top".equals(position)) {
+          layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+        } else {
+          layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+        }
+        if (mBannerView.getParent() != null) {
+          ((ViewGroup) mBannerView.getParent()).removeView(mBannerView);
+        }
+        AnythinkModuleModule.this.getCurrentActivity().addContentView(mBannerView, layoutParams);
       }
     });
   }
