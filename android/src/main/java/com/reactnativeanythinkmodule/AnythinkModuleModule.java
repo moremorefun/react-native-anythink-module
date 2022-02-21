@@ -2,6 +2,10 @@ package com.reactnativeanythinkmodule;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +46,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @ReactModule(name = AnythinkModuleModule.NAME)
 public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public static final String NAME = "AnythinkModule";
+
   private static final HashMap<String, ATSplashAd> aTSplashAdMap = new HashMap<>();
+  private static final HashMap<String, Dialog> aTSplashAdDialogMap = new HashMap<>();
+
   private static final HashMap<String, ATBannerView> aTBannerViewMap = new HashMap<>();
 
   public AnythinkModuleModule(ReactApplicationContext reactContext) {
@@ -71,8 +79,28 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return valueMap;
     } catch (JSONException e) {
       e.printStackTrace();
+      Log.e(NAME, "json string to map err: " + e.toString() + " str: " + jsonString);
     }
     return null;
+  }
+
+  public static String[] convertToStrings(ReadableArray arr) {
+    ArrayList<Object> objects = arr.toArrayList();
+    int size = objects.size();
+    if (size > 0) {
+      String[] items = new String[size];
+      String p;
+      Object o;
+      for (int i = 0; i < size; i++) {
+        o = objects.get(i);
+        if (o instanceof String) {
+          p = (String) o;
+          items[i] = p;
+        }
+      }
+      return items;
+    }
+    return new String[size];
   }
 
   @Override
@@ -140,88 +168,55 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATSDKSetExcludePackageList(ReadableArray packageList) {
-    if (packageList != null) {
-      ArrayList<Object> objects = packageList.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] packages = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            packages[i] = p;
-          }
-        }
-        ATSDK.setExcludePackageList(Arrays.asList(packages));
-      }
+    List<String> strs = Arrays.asList(convertToStrings(packageList));
+    if (strs.size() > 0) {
+      ATSDK.setExcludePackageList(strs);
+    } else {
+      Log.e(NAME, "ATSDKSetExcludePackageList list err: " + packageList.toString());
     }
   }
 
   @ReactMethod
   public void ATSDKSetFilterAdSourceIdList(String TopOnPlacementID, ReadableArray packageList) {
-    if (packageList != null) {
-      ArrayList<Object> objects = packageList.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] packages = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            packages[i] = p;
-          }
-        }
-        ATSDK.setFilterAdSourceIdList(TopOnPlacementID, Arrays.asList(packages));
-      }
+    List<String> strs = Arrays.asList(convertToStrings(packageList));
+    if (strs.size() > 0) {
+      ATSDK.setFilterAdSourceIdList(TopOnPlacementID, strs);
+    } else {
+      Log.e(NAME, "ATSDKSetExcludePackageList list err: " + packageList.toString());
     }
   }
 
   @ReactMethod
   public void ATRewardVideoAutoAdInit(ReadableArray placementIds) {
-    if (placementIds != null) {
-      ArrayList<Object> objects = placementIds.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] items = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            items[i] = p;
-          }
-        }
-        ATRewardVideoAutoAd.init(this.getReactApplicationContext(), items, new ATRewardVideoAutoLoadListener() {
-          @Override
-          public void onRewardVideoAutoLoaded(String s) {
-            AnythinkModuleModule.this.
-              getReactApplicationContext().
-              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onRewardVideoAutoLoaded",
-              s
-            );
-          }
-
-          @Override
-          public void onRewardVideoAutoLoadFail(String s, AdError adError) {
-            WritableMap writableMap = Arguments.createMap();
-            writableMap.putString("placementId", s);
-            writableMap.putString("adError", adError.toString());
-            AnythinkModuleModule.this.
-              getReactApplicationContext().
-              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onRewardVideoAutoLoadFail",
-              writableMap
-            );
-          }
-        });
-      }
+    String[] strs = convertToStrings(placementIds);
+    if (strs.length == 0) {
+      Log.e(NAME, "ATRewardVideoAutoAdInit list err: " + placementIds.toString());
+      return;
     }
+    ATRewardVideoAutoAd.init(this.getReactApplicationContext(), strs, new ATRewardVideoAutoLoadListener() {
+      @Override
+      public void onRewardVideoAutoLoaded(String placementId) {
+        AnythinkModuleModule.this.
+          getReactApplicationContext().
+          getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+          "onRewardVideoAutoLoaded",
+          placementId
+        );
+      }
+
+      @Override
+      public void onRewardVideoAutoLoadFail(String s, AdError adError) {
+        WritableMap writableMap = Arguments.createMap();
+        writableMap.putString("placementId", s);
+        writableMap.putString("adError", adError.toString());
+        AnythinkModuleModule.this.
+          getReactApplicationContext().
+          getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+          "onRewardVideoAutoLoadFail",
+          writableMap
+        );
+      }
+    });
   }
 
   @ReactMethod
@@ -242,7 +237,13 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATRewardVideoAutoAdShow(String placementId) {
-    ATRewardVideoAutoAd.show(this.getCurrentActivity(), placementId, new ATRewardVideoAutoEventListener() {
+    Activity a = this.getCurrentActivity();
+    if (a == null) {
+      Log.e(NAME, "ATRewardVideoAutoAdShow placementId:" + placementId + " getCurrentActivity=null");
+      return;
+    }
+
+    ATRewardVideoAutoAd.show(a, placementId, new ATRewardVideoAutoEventListener() {
       @Override
       public void onRewardedVideoAdPlayStart(ATAdInfo atAdInfo) {
         WritableMap writableMap = Arguments.createMap();
@@ -326,44 +327,22 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATRewardVideoAutoAddPlacementId(ReadableArray placementIds) {
-    if (placementIds != null) {
-      ArrayList<Object> objects = placementIds.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] items = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            items[i] = p;
-          }
-        }
-        ATRewardVideoAutoAd.addPlacementId(items);
-      }
+    String[] ids = convertToStrings(placementIds);
+    if (ids.length == 0) {
+      Log.e(NAME, "ATRewardVideoAutoAddPlacementId id size 0: " + placementIds.toString());
+      return;
     }
+    ATRewardVideoAutoAd.addPlacementId(ids);
   }
 
   @ReactMethod
   public void ATRewardVideoAutoRemovePlacementId(ReadableArray placementIds) {
-    if (placementIds != null) {
-      ArrayList<Object> objects = placementIds.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] items = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            items[i] = p;
-          }
-        }
-        ATRewardVideoAutoAd.removePlacementId(items);
-      }
+    String[] ids = convertToStrings(placementIds);
+    if (ids.length == 0) {
+      Log.e(NAME, "ATRewardVideoAutoRemovePlacementId id size 0: " + placementIds.toString());
+      return;
     }
+    ATRewardVideoAutoAd.removePlacementId(ids);
   }
 
   @ReactMethod
@@ -373,46 +352,35 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATInterstitialAutoAdInit(ReadableArray placementIds) {
-    if (placementIds != null) {
-      ArrayList<Object> objects = placementIds.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] items = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            items[i] = p;
-          }
-        }
-        ATInterstitialAutoAd.init(this.getReactApplicationContext(), items, new ATInterstitialAutoLoadListener() {
-          @Override
-          public void onInterstitialAutoLoaded(String s) {
-            AnythinkModuleModule.this.
-              getReactApplicationContext().
-              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onInterstitialAutoLoaded",
-              s
-            );
-          }
-
-          @Override
-          public void onInterstitialAutoLoadFail(String s, AdError adError) {
-            WritableMap writableMap = Arguments.createMap();
-            writableMap.putString("placementId", s);
-            writableMap.putString("adError", adError.toString());
-            AnythinkModuleModule.this.
-              getReactApplicationContext().
-              getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onInterstitialAutoLoadFail",
-              writableMap
-            );
-          }
-        });
-      }
+    String[] ids = convertToStrings(placementIds);
+    if (ids.length == 0) {
+      Log.e(NAME, "ATInterstitialAutoAdInit id size 0: " + placementIds.toString());
+      return;
     }
+    ATInterstitialAutoAd.init(this.getReactApplicationContext(), ids, new ATInterstitialAutoLoadListener() {
+      @Override
+      public void onInterstitialAutoLoaded(String s) {
+        AnythinkModuleModule.this.
+          getReactApplicationContext().
+          getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+          "onInterstitialAutoLoaded",
+          s
+        );
+      }
+
+      @Override
+      public void onInterstitialAutoLoadFail(String s, AdError adError) {
+        WritableMap writableMap = Arguments.createMap();
+        writableMap.putString("placementId", s);
+        writableMap.putString("adError", adError.toString());
+        AnythinkModuleModule.this.
+          getReactApplicationContext().
+          getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+          "onInterstitialAutoLoadFail",
+          writableMap
+        );
+      }
+    });
   }
 
   @ReactMethod
@@ -433,7 +401,12 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATInterstitialAutoAdShow(String placementId) {
-    ATInterstitialAutoAd.show(this.getCurrentActivity(), placementId, new ATInterstitialAutoEventListener() {
+    Activity a = this.getCurrentActivity();
+    if (a == null) {
+      Log.e(NAME, "ATInterstitialAutoAdShow getCurrentActivity==null");
+      return;
+    }
+    ATInterstitialAutoAd.show(a, placementId, new ATInterstitialAutoEventListener() {
       @Override
       public void onInterstitialAdClicked(ATAdInfo atAdInfo) {
         WritableMap writableMap = Arguments.createMap();
@@ -516,44 +489,22 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATInterstitialAutoAdAddPlacementId(ReadableArray placementIds) {
-    if (placementIds != null) {
-      ArrayList<Object> objects = placementIds.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] items = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            items[i] = p;
-          }
-        }
-        ATInterstitialAutoAd.addPlacementId(items);
-      }
+    String[] ids = convertToStrings(placementIds);
+    if (ids.length == 0) {
+      Log.e(NAME, "ATInterstitialAutoAdAddPlacementId id size 0: " + placementIds.toString());
+      return;
     }
+    ATInterstitialAutoAd.addPlacementId(ids);
   }
 
   @ReactMethod
   public void ATInterstitialAutoAdRemovePlacementId(ReadableArray placementIds) {
-    if (placementIds != null) {
-      ArrayList<Object> objects = placementIds.toArrayList();
-      int size = objects.size();
-      if (size > 0) {
-        String[] items = new String[size];
-        String p;
-        Object o;
-        for (int i = 0; i < size; i++) {
-          o = objects.get(i);
-          if (o instanceof String) {
-            p = (String) o;
-            items[i] = p;
-          }
-        }
-        ATInterstitialAutoAd.removePlacementId(items);
-      }
+    String[] ids = convertToStrings(placementIds);
+    if (ids.length == 0) {
+      Log.e(NAME, "ATInterstitialAutoAdAddPlacementId id size 0: " + placementIds.toString());
+      return;
     }
+    ATInterstitialAutoAd.removePlacementId(ids);
   }
 
   @ReactMethod
@@ -650,7 +601,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         },
         fetchAdTimeout,
         defaultAdSourceConfig
-        );
+      );
       aTSplashAdMap.put(placementId, helper);
     }
   }
@@ -661,7 +612,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdSetLocalExtra placementId: " + placementId + " ad==null");
+      return;
+    }
     ad.setLocalExtra(getMap(localExtra));
   }
 
@@ -671,7 +625,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdIsAdReady placementId: " + placementId + " ad==null");
+      return;
+    }
     boolean b = ad.isAdReady();
     promise.resolve(b);
   }
@@ -682,7 +639,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdCheckAdStatus placementId: " + placementId + " ad==null");
+      return;
+    }
     ATAdStatusInfo info = ad.checkAdStatus();
     WritableMap writableMap = Arguments.createMap();
     writableMap.putBoolean("isLoading", info.isLoading());
@@ -697,26 +657,95 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdLoadAd placementId: " + placementId + " ad==null");
+      return;
+    }
     ad.loadAd();
   }
 
   @ReactMethod
-  public void ATSplashAdShow(String placementId, String position) {
+  public void ATSplashAdShow(String placementId) {
     if (!aTSplashAdMap.containsKey(placementId)) {
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdShow placementId: " + placementId + " ad==null");
+      return;
+    }
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        int width = 0;
-        int height = 0;
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
-        FrameLayout view = new FrameLayout(AnythinkModuleModule.this.getReactApplicationContext());
-        AnythinkModuleModule.this.getCurrentActivity().addContentView(view, layoutParams);
-        ad.show(AnythinkModuleModule.this.getCurrentActivity(), view);
+        Activity a = AnythinkModuleModule.this.getCurrentActivity();
+        if (a == null) {
+          Log.e(NAME, "ATSplashAdShow placementId: " + placementId + " getCurrentActivity==null");
+          return;
+        }
+        if (a.isFinishing()) {
+          Log.e(NAME, "ATSplashAdShow placementId: " + placementId + " isFinishing");
+          return;
+        }
+        Dialog dialog;
+        if (!aTSplashAdDialogMap.containsKey(placementId)) {
+          dialog = new Dialog(a, R.style.SplashScreen_SplashTheme);
+          dialog.setContentView(R.layout.launch_screen);
+          dialog.setCancelable(false);
+          aTSplashAdDialogMap.put(placementId, dialog);
+        } else {
+          dialog = aTSplashAdDialogMap.get(placementId);
+        }
+        if (dialog == null) {
+          Log.e(NAME, "ATSplashAdShow placementId: " + placementId + " dialog==null");
+          return;
+        }
+        if (!dialog.isShowing()) {
+          dialog.show();
+        }
+        FrameLayout adContainer = dialog.findViewById(R.id.splash_ad_container);
+        ad.show(AnythinkModuleModule.this.getCurrentActivity(), adContainer);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void ATSplashAdHide(String placementId) {
+    if (!aTSplashAdMap.containsKey(placementId)) {
+      return;
+    }
+    ATSplashAd ad = aTSplashAdMap.get(placementId);
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdHide placementId: " + placementId + " ad==null");
+      return;
+    }
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        Dialog dialog;
+        if (!aTSplashAdDialogMap.containsKey(placementId)) {
+          Log.e(NAME, "ATSplashAdHide placementId: " + placementId + " isFinishing");
+          return;
+        }
+        dialog = aTSplashAdDialogMap.get(placementId);
+        if (dialog == null) {
+          Log.e(NAME, "ATSplashAdHide placementId: " + placementId + " dialog==null");
+          return;
+        }
+        if (dialog.isShowing()) {
+          boolean isDestroyed = false;
+          Activity a = dialog.getOwnerActivity();
+          if (a == null) {
+            Log.e(NAME, "ATSplashAdHide placementId: " + placementId + " getOwnerActivity==null");
+            return;
+          }
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            isDestroyed = a.isDestroyed();
+          }
+          if (!a.isFinishing() && !isDestroyed) {
+            dialog.dismiss();
+          }
+          aTSplashAdDialogMap.remove(placementId);
+        }
       }
     });
   }
@@ -727,12 +756,15 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATSplashAdCheckSplashDefaultConfigList placementId: " + placementId + " ad==null");
+      return;
+    }
     ATSplashAd.checkSplashDefaultConfigList(this.getReactApplicationContext(), placementId, null);
   }
 
   @ReactMethod
-  public void ATBannerViewInit(String placementId) {
+  public void ATBannerViewInit(String placementId, String settings) {
     ATBannerView helper;
 
     if (!aTBannerViewMap.containsKey(placementId)) {
@@ -827,6 +859,29 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
           );
         }
       });
+
+      try {
+        JSONObject jsonObject = new JSONObject(settings);
+        int width = 0;
+        int height = 0;
+
+        if (jsonObject.has(Const.WIDTH)) {
+          width = jsonObject.optInt(Const.WIDTH);
+        }
+        if (jsonObject.has(Const.HEIGHT)) {
+          height = jsonObject.optInt(Const.HEIGHT);
+        }
+        if (helper.getLayoutParams() == null) {
+          FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+          helper.setLayoutParams(lp);
+        } else {
+          helper.getLayoutParams().width = width;
+          helper.getLayoutParams().height = height;
+        }
+      } catch (Throwable e) {
+        e.printStackTrace();
+        Log.e(NAME, "ATBannerViewInit err: " + e.toString());
+      }
       aTBannerViewMap.put(placementId, helper);
     }
   }
@@ -837,7 +892,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATBannerViewSetLocalExtra placementId: " + placementId + " ad==null");
+      return;
+    }
     ad.setLocalExtra(getMap(localExtra));
   }
 
@@ -847,7 +905,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATBannerViewLoadAd placementId: " + placementId + " ad==null");
+      return;
+    }
     ad.loadAd();
   }
 
@@ -857,7 +918,13 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATBannerViewLoadAd placementId: " + placementId + " ad==null");
+      return;
+    }
+    if (ad.getParent() != null) {
+      ((ViewGroup) ad.getParent()).removeView(ad);
+    }
     ad.destroy();
   }
 
@@ -867,7 +934,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
-    assert ad != null;
+    if (ad == null) {
+      Log.e(NAME, "ATBannerViewCheckAdStatus placementId: " + placementId + " ad==null");
+      return;
+    }
     ATAdStatusInfo info = ad.checkAdStatus();
     WritableMap writableMap = Arguments.createMap();
     writableMap.putBoolean("isLoading", info.isLoading());
@@ -882,7 +952,10 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       return;
     }
     ATBannerView mBannerView = aTBannerViewMap.get(placementId);
-    assert mBannerView != null;
+    if (mBannerView == null) {
+      Log.e(NAME, "ATBannerViewShow placementId: " + placementId + " ad==null");
+      return;
+    }
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
