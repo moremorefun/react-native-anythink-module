@@ -5,8 +5,23 @@
  * @format
  */
 
-module.exports = {
-  transformer: {
+// module.exports = {
+//   transformer: {
+//     getTransformOptions: async () => ({
+//       transform: {
+//         experimentalImportSupport: false,
+//         inlineRequires: true,
+//       },
+//     }),
+//   },
+// };
+
+const {
+  applyConfigForLinkedDependencies,
+} = require('@carimus/metro-symlinked-deps');
+
+module.exports = applyConfigForLinkedDependencies(
+  {
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
@@ -14,4 +29,7 @@ module.exports = {
       },
     }),
   },
-};
+  {
+    projectRoot: __dirname,
+  },
+);
