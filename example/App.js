@@ -74,9 +74,13 @@ const App: () => Node = () => {
         const AnythinkModuleEventEmitter = new NativeEventEmitter(
           NativeModules.AnythinkModule,
         );
-        AnythinkModuleBridge.setListeners(AnythinkModuleEventEmitter);
+        AnythinkModuleBridge.setListeners(
+          AnythinkModuleEventEmitter,
+          (type, args) => {
+            console.log('[App] AnythinkModuleEventEmitter', type, args);
+          },
+        );
       }
-
       // 初始化自动加载
       AnythinkModuleBridge.ATRewardVideoAutoAdInit(['b61b16cfd7abae']);
     })();

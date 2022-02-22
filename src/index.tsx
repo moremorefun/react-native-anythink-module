@@ -18,30 +18,18 @@ const AnythinkModule = NativeModules.AnythinkModule
     );
 
 const AnythinkModuleBridge = {
-  setListeners: function (emitter: any) {
-    // if (NativeModules.AnythinkModule) {
-    // const AnythinkModuleEventEmitter = new NativeEventEmitter(
-    //   NativeModules.AnythinkModule
-    // );
-    // AnythinkModuleEventEmitter.addListener(
-    //   'onRewardVideoAutoLoaded',
-    //   args => {
-    //     console.log(
-    //       '[App] AnythinkModuleEventEmitter',
-    //       'onRewardVideoAutoLoaded',
-    //       args,
-    //     );
-    //   },
-    // );
-    emitter.addListener('onRewardVideoAutoLoadFail', (args:any) => {
-      console.log(
-        'AnythinkModuleEventEmitter',
-        'onRewardVideoAutoLoadFail',
-        args
-      );
-    });
-    console.log('AnythinkModuleEventEmitter', emitter);
-    // }
+  setListeners: function (
+    emitter: any,
+    cb: (event: string, data: any) => void
+  ) {
+    function add(type: string) {
+      emitter.removeAllSubscriptions(type);
+      emitter.addListener(type, (args: any) => {
+        cb(type, args);
+      });
+    }
+    add('onRewardVideoAutoLoaded');
+    add('onRewardVideoAutoLoadFail');
   },
 
   ATSDKInit: function (TopOnAppID: string, TopOnAppKey: string) {
