@@ -110,6 +110,17 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void addListener(String eventName) {
+
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+
+  }
+
+
+  @ReactMethod
   public void ATSDKInit(String TopOnAppID, String TopOnAppKey) {
     ATSDK.init(this.getReactApplicationContext(), TopOnAppID, TopOnAppKey);
   }

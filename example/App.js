@@ -9,6 +9,8 @@
 import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
+  NativeEventEmitter,
+  NativeModules,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -38,6 +40,35 @@ const App: () => Node = () => {
         'a61b16cce7d524',
         '97a20b7e3b342cc51bf9ea278a6972af',
       );
+      // 添加监听
+      if (NativeModules.AnythinkModule) {
+        const AnythinkModuleEventEmitter = new NativeEventEmitter(
+          NativeModules.AnythinkModule,
+        );
+        AnythinkModuleEventEmitter.addListener(
+          'onRewardVideoAutoLoaded',
+          args => {
+            console.log(
+              'AnythinkModuleEventEmitter',
+              'onRewardVideoAutoLoaded',
+              args,
+            );
+          },
+        );
+        AnythinkModuleEventEmitter.addListener(
+          'onRewardVideoAutoLoadFail',
+          args => {
+            console.log(
+              'AnythinkModuleEventEmitter',
+              'onRewardVideoAutoLoadFail',
+              args,
+            );
+          },
+        );
+        console.log('AnythinkModuleEventEmitter', AnythinkModuleEventEmitter);
+      }
+      // 初始化自动加载
+      AnythinkModuleBridge.ATRewardVideoAutoAdInit(['b61b16cfd7abae']);
     })();
   }, []);
 
