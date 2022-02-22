@@ -111,7 +111,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void addListener(String eventName) {
-
+    Log.i(NAME, "addListener: " + eventName);
   }
 
   @ReactMethod

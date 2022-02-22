@@ -18,6 +18,32 @@ const AnythinkModule = NativeModules.AnythinkModule
     );
 
 const AnythinkModuleBridge = {
+  setListeners: function (emitter: any) {
+    // if (NativeModules.AnythinkModule) {
+    // const AnythinkModuleEventEmitter = new NativeEventEmitter(
+    //   NativeModules.AnythinkModule
+    // );
+    // AnythinkModuleEventEmitter.addListener(
+    //   'onRewardVideoAutoLoaded',
+    //   args => {
+    //     console.log(
+    //       '[App] AnythinkModuleEventEmitter',
+    //       'onRewardVideoAutoLoaded',
+    //       args,
+    //     );
+    //   },
+    // );
+    emitter.addListener('onRewardVideoAutoLoadFail', (args:any) => {
+      console.log(
+        'AnythinkModuleEventEmitter',
+        'onRewardVideoAutoLoadFail',
+        args
+      );
+    });
+    console.log('AnythinkModuleEventEmitter', emitter);
+    // }
+  },
+
   ATSDKInit: function (TopOnAppID: string, TopOnAppKey: string) {
     AnythinkModule.ATSDKInit(TopOnAppID, TopOnAppKey);
   },
