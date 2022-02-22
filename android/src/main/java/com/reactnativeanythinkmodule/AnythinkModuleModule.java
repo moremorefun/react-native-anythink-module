@@ -805,7 +805,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             getReactApplicationContext().
             getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
             "onBannerLoaded",
-            "{}"
+            placementId
           );
         }
 
