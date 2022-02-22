@@ -17,19 +17,58 @@ const AnythinkModule = NativeModules.AnythinkModule
       }
     );
 
+const listenersMap: Map<string, any> = new Map<string, any>();
+
 const AnythinkModuleBridge = {
   setListeners: function (
     emitter: any,
     cb: (event: string, data: any) => void
   ) {
     function add(type: string) {
-      emitter.removeAllSubscriptions(type);
-      emitter.addListener(type, (args: any) => {
-        cb(type, args);
-      });
+      if (listenersMap.has(type)) {
+        const listener = listenersMap.get(type);
+        listener.remove();
+        listenersMap.delete(type);
+      }
+      listenersMap.set(
+        type,
+        emitter.addListener(type, (args: any) => {
+          cb(type, args);
+        })
+      );
     }
     add('onRewardVideoAutoLoaded');
     add('onRewardVideoAutoLoadFail');
+    add('onRewardedVideoAdPlayStart');
+    add('onRewardedVideoAdPlayEnd');
+    add('onRewardedVideoAdPlayFailed');
+    add('onRewardedVideoAdClosed');
+    add('onRewardedVideoAdPlayClicked');
+    add('onReward');
+
+    add('onInterstitialAutoLoaded');
+    add('onInterstitialAutoLoadFail');
+    add('onInterstitialAdClicked');
+    add('onInterstitialAdShow');
+    add('onInterstitialAdClose');
+    add('onInterstitialAdVideoStart');
+    add('onInterstitialAdVideoEnd');
+    add('onInterstitialAdVideoError');
+
+    add('onAdLoaded');
+    add('onAdLoadTimeout');
+    add('onNoAdError');
+    add('onAdShow');
+    add('onAdClick');
+    add('onAdDismiss');
+
+    add('onBannerLoaded');
+    add('onBannerFailed');
+    add('onBannerClicked');
+    add('onBannerShow');
+    add('onBannerClose');
+    add('onBannerAutoRefreshed');
+    add('onBannerAutoRefreshFail');
   },
 
   ATSDKInit: function (TopOnAppID: string, TopOnAppKey: string) {
@@ -174,8 +213,8 @@ const AnythinkModuleBridge = {
     AnythinkModule.ATSplashAdCheckSplashDefaultConfigList(placementId);
   },
 
-  ATBannerViewInit: function (placementId: string) {
-    AnythinkModule.ATBannerViewInit(placementId);
+  ATBannerViewInit: function (placementId: string, settings: string) {
+    AnythinkModule.ATBannerViewInit(placementId, settings);
   },
   ATBannerViewSetLocalExtra: function (
     TopOnPlacementID: string,

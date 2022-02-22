@@ -9,8 +9,11 @@
 import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
+  Dimensions,
   NativeEventEmitter,
   NativeModules,
+  PixelRatio,
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -81,8 +84,27 @@ const App: () => Node = () => {
           },
         );
       }
-      // 初始化自动加载
+      // 加载广告
       AnythinkModuleBridge.ATRewardVideoAutoAdInit(['b61b16cfd7abae']);
+      AnythinkModuleBridge.ATInterstitialAutoAdInit(['b62023abcd0c9c']);
+      AnythinkModuleBridge.ATSplashAdInit(
+        'b61c4951566e55',
+        5000,
+        '{"unit_id":1308102,"nw_firm_id":15,"adapter_class":"com.anythink.network.toutiao.TTATSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"dl_type\\":\\"0\\",\\"slot_id\\":\\"887668414\\",\\"personalized_template\\":\\"0\\",\\"zoomoutad_sw\\":\\"1\\",\\"app_id\\":\\"5261386\\"}"}',
+      );
+      AnythinkModuleBridge.ATSplashAdLoadAd('b61c4951566e55');
+      let wInPiexel = Dimensions.get('window').width * PixelRatio.get();
+      if (Platform.OS === 'ios') {
+        wInPiexel = Dimensions.get('window').width;
+      }
+      AnythinkModuleBridge.ATBannerViewInit(
+        'b62025d72e19ec',
+        JSON.stringify({
+          width: wInPiexel,
+          height: (wInPiexel * 90) / 600,
+        }),
+      );
+      AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
     })();
   }, []);
 

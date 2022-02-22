@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example">
+  package="com.henkuai.goplayrn">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!--TopOn SDK通用 必要权限-->

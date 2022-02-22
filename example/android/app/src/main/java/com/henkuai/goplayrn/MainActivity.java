@@ -1,4 +1,4 @@
-package com.example;
+package com.henkuai.goplayrn;
 
 import com.facebook.react.ReactActivity;
 

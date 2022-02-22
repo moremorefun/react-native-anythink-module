@@ -627,6 +627,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdSetLocalExtra(String placementId, String localExtra) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdSetLocalExtra placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -640,6 +641,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdIsAdReady(String placementId, Promise promise) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdIsAdReady placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -654,6 +656,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdCheckAdStatus(String placementId, Promise promise) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdCheckAdStatus placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -672,6 +675,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdLoadAd(String placementId) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdLoadAd placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -685,6 +689,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdShow(String placementId) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdShow placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -729,6 +734,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdHide(String placementId) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdHide placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -770,6 +776,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATSplashAdCheckSplashDefaultConfigList(String placementId) {
     if (!aTSplashAdMap.containsKey(placementId)) {
+      Log.e(NAME, "ATSplashAdCheckSplashDefaultConfigList placementId: " + placementId + " ad==null");
       return;
     }
     ATSplashAd ad = aTSplashAdMap.get(placementId);
@@ -785,7 +792,11 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
     ATBannerView helper;
 
     if (!aTBannerViewMap.containsKey(placementId)) {
-      helper = new ATBannerView(AnythinkModuleModule.this.getReactApplicationContext());
+      Activity a = AnythinkModuleModule.this.getCurrentActivity();
+      if (a == null) {
+        Log.e(NAME, "ATBannerViewInit placementId: " + placementId + " getCurrentActivity==null");
+      }
+      helper = new ATBannerView(a);
       helper.setPlacementId(placementId);
       helper.setBannerAdListener(new ATBannerListener() {
         @Override
@@ -906,6 +917,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewSetLocalExtra(String placementId, String localExtra) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewSetLocalExtra placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
@@ -919,6 +931,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewLoadAd(String placementId) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewLoadAd placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
@@ -932,6 +945,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewDestroy(String placementId) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewDestroy placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
@@ -948,6 +962,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewCheckAdStatus(String placementId, Promise promise) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewCheckAdStatus placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView ad = aTBannerViewMap.get(placementId);
@@ -966,6 +981,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewShow(String placementId, String position) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewShow placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView mBannerView = aTBannerViewMap.get(placementId);
@@ -1004,10 +1020,14 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewVisible(String placementId) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewVisible placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView mBannerView = aTBannerViewMap.get(placementId);
-    assert mBannerView != null;
+    if (mBannerView == null) {
+      Log.e(NAME, "ATBannerViewVisible placementId: " + placementId + " ad==null");
+      return;
+    }
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -1019,10 +1039,14 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewInvisible(String placementId) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewInvisible placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView mBannerView = aTBannerViewMap.get(placementId);
-    assert mBannerView != null;
+    if (mBannerView == null) {
+      Log.e(NAME, "ATBannerViewInvisible placementId: " + placementId + " ad==null");
+      return;
+    }
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -1034,10 +1058,14 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void ATBannerViewRemove(String placementId) {
     if (!aTBannerViewMap.containsKey(placementId)) {
+      Log.e(NAME, "ATBannerViewRemove placementId: " + placementId + " ad==null");
       return;
     }
     ATBannerView mBannerView = aTBannerViewMap.get(placementId);
-    assert mBannerView != null;
+    if (mBannerView == null) {
+      Log.e(NAME, "ATBannerViewRemove placementId: " + placementId + " ad==null");
+      return;
+    }
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
