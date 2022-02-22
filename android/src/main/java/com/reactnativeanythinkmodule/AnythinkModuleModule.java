@@ -62,7 +62,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
     super(reactContext);
   }
 
-  public static Map<String, Object> getMap(String jsonString) {
+  public static Map<String, Object> convertToMap(String jsonString) {
     JSONObject jsonObject;
     try {
       jsonObject = new JSONObject(jsonString);
@@ -158,12 +158,12 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATSDKInitCustomMap(String customMap) {
-    ATSDK.initCustomMap(getMap(customMap));
+    ATSDK.initCustomMap(convertToMap(customMap));
   }
 
   @ReactMethod
   public void ATSDKInitPlacementCustomMap(String TopOnPlacementID, String customMap) {
-    ATSDK.initPlacementCustomMap(TopOnPlacementID, getMap(customMap));
+    ATSDK.initPlacementCustomMap(TopOnPlacementID, convertToMap(customMap));
   }
 
   @ReactMethod
@@ -347,7 +347,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATRewardVideoAutoSetLocalExtra(String placementId, String localExtra) {
-    ATRewardVideoAutoAd.setLocalExtra(placementId, getMap(localExtra));
+    ATRewardVideoAutoAd.setLocalExtra(placementId, convertToMap(localExtra));
   }
 
   @ReactMethod
@@ -509,7 +509,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void ATInterstitialAutoAdSetLocalExtra(String placementId, String localExtra) {
-    ATInterstitialAutoAd.setLocalExtra(placementId, getMap(localExtra));
+    ATInterstitialAutoAd.setLocalExtra(placementId, convertToMap(localExtra));
   }
 
   @ReactMethod
@@ -616,7 +616,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       Log.e(NAME, "ATSplashAdSetLocalExtra placementId: " + placementId + " ad==null");
       return;
     }
-    ad.setLocalExtra(getMap(localExtra));
+    ad.setLocalExtra(convertToMap(localExtra));
   }
 
   @ReactMethod
@@ -689,7 +689,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         Dialog dialog;
         if (!aTSplashAdDialogMap.containsKey(placementId)) {
           dialog = new Dialog(a, R.style.SplashScreen_SplashTheme);
-          dialog.setContentView(R.layout.launch_screen);
+          dialog.setContentView(R.layout.splash_screen);
           dialog.setCancelable(false);
           aTSplashAdDialogMap.put(placementId, dialog);
         } else {
@@ -896,7 +896,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       Log.e(NAME, "ATBannerViewSetLocalExtra placementId: " + placementId + " ad==null");
       return;
     }
-    ad.setLocalExtra(getMap(localExtra));
+    ad.setLocalExtra(convertToMap(localExtra));
   }
 
   @ReactMethod
@@ -974,7 +974,12 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         if (mBannerView.getParent() != null) {
           ((ViewGroup) mBannerView.getParent()).removeView(mBannerView);
         }
-        AnythinkModuleModule.this.getCurrentActivity().addContentView(mBannerView, layoutParams);
+        Activity a = AnythinkModuleModule.this.getCurrentActivity();
+        if (a == null) {
+          Log.e(NAME, "ATBannerViewShow placementId: " + placementId + " getCurrentActivity==null");
+          return;
+        }
+        a.addContentView(mBannerView, layoutParams);
       }
     });
   }
