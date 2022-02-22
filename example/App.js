@@ -64,16 +64,17 @@ const App: () => Node = () => {
   useEffect(() => {
     alert('useEffect');
     (async () => {
-      AnythinkModuleBridge.ATSDKSetNetworkLogDebug(true);
-      const ver = await AnythinkModuleBridge.ATSDKGetSDKVersionName();
-      console.log('ver: ' + ver);
+      if (__DEV__) {
+        // 设置为debug模式
+        AnythinkModuleBridge.ATSDKSetNetworkLogDebug(true);
+        // 检查SDK是否集成成功
+        AnythinkModuleBridge.ATSDKIntegrationChecking();
+      }
+      // 初始化SDK
       AnythinkModuleBridge.ATSDKInit(
         'a61b16cce7d524',
         '97a20b7e3b342cc51bf9ea278a6972af',
       );
-      const deviceInfo = await AnythinkModuleBridge.ATSDKTestModeDeviceInfo();
-      console.log('deviceInfo: ' + deviceInfo);
-      AnythinkModuleBridge.ATSDKIntegrationChecking();
     })();
   }, []);
 
