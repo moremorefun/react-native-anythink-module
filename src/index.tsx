@@ -55,12 +55,12 @@ const AnythinkModuleBridge = {
     add('onInterstitialAdVideoEnd');
     add('onInterstitialAdVideoError');
 
-    add('onAdLoaded');
-    add('onAdLoadTimeout');
-    add('onNoAdError');
-    add('onAdShow');
-    add('onAdClick');
-    add('onAdDismiss');
+    add('onSplashAdLoaded');
+    add('onSplashAdLoadTimeout');
+    add('onSplashNoAdError');
+    add('onSplashAdShow');
+    add('onSplashAdClick');
+    add('onSplashAdDismiss');
 
     add('onBannerLoaded');
     add('onBannerFailed');

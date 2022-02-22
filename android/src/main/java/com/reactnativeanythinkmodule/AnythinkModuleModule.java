@@ -547,7 +547,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onAdLoaded",
+              "onSplashAdLoaded",
               writableMap
             );
           }
@@ -559,7 +559,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onAdLoadTimeout",
+              "onSplashAdLoadTimeout",
               writableMap
             );
           }
@@ -572,7 +572,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onNoAdError",
+              "onSplashNoAdError",
               writableMap
             );
           }
@@ -585,7 +585,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onAdShow",
+              "onSplashAdShow",
               writableMap
             );
           }
@@ -598,7 +598,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onAdClick",
+              "onSplashAdClick",
               writableMap
             );
           }
@@ -612,7 +612,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-              "onAdDismiss",
+              "onSplashAdDismiss",
               writableMap
             );
           }
