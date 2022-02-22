@@ -6,50 +6,52 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+import {NativeModules, Platform} from 'react-native';
+
+const LINKING_ERROR =
+  "The package 'react-native-anythink-module' doesn't seem to be linked. Make sure: \n\n" +
+  Platform.select({ios: "- You have run 'pod install'\n", default: ''}) +
+  '- You rebuilt the app after installing the package\n' +
+  '- You are not using Expo managed workflow\n';
+
+const AnythinkModule = NativeModules.AnythinkModule
+  ? NativeModules.AnythinkModule
+  : new Proxy(
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      },
+    );
+
+const AnythinkModuleBridge = {
+  ATSDKInit: function (TopOnAppID: string, TopOnAppKey: string) {
+    AnythinkModule.ATSDKInit(TopOnAppID, TopOnAppKey);
+  },
+  ATSDKSetNetworkLogDebug: function (debug: boolean) {
+    AnythinkModule.ATSDKSetNetworkLogDebug(debug);
+  },
+  ATSDKGetSDKVersionName: function (): Promise<string> {
+    return AnythinkModule.ATSDKGetSDKVersionName();
+  },
+  ATSDKIntegrationChecking: function () {
+    return AnythinkModule.ATSDKIntegrationChecking();
+  },
+  ATSDKTestModeDeviceInfo: function (): Promise<string> {
+    return AnythinkModule.ATSDKTestModeDeviceInfo();
+  },
 };
 
 const App: () => Node = () => {
@@ -59,54 +61,28 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  useEffect(() => {
+    alert('useEffect');
+    (async () => {
+      AnythinkModuleBridge.ATSDKSetNetworkLogDebug(true);
+      const ver = await AnythinkModuleBridge.ATSDKGetSDKVersionName();
+      console.log('ver: ' + ver);
+      AnythinkModuleBridge.ATSDKInit(
+        'a61b16cce7d524',
+        '97a20b7e3b342cc51bf9ea278a6972af',
+      );
+      const deviceInfo = await AnythinkModuleBridge.ATSDKTestModeDeviceInfo();
+      console.log('deviceInfo: ' + deviceInfo);
+      AnythinkModuleBridge.ATSDKIntegrationChecking();
+    })();
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <ScrollView />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

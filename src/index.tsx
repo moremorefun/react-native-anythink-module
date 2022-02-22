@@ -17,6 +17,22 @@ const AnythinkModule = NativeModules.AnythinkModule
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return AnythinkModule.multiply(a, b);
-}
+const AnythinkModuleBridge = {
+  ATSDKInit: function (TopOnAppID: string, TopOnAppKey: string) {
+    AnythinkModule.ATSDKInit(TopOnAppID, TopOnAppKey);
+  },
+  ATSDKSetNetworkLogDebug: function (debug: boolean) {
+    AnythinkModule.ATSDKSetNetworkLogDebug(debug);
+  },
+  ATSDKGetSDKVersionName: function (): Promise<string> {
+    return AnythinkModule.ATSDKGetSDKVersionName();
+  },
+  ATSDKIntegrationChecking: function () {
+    return AnythinkModule.ATSDKIntegrationChecking();
+  },
+  ATSDKTestModeDeviceInfo: function (): Promise<string> {
+    return AnythinkModule.ATSDKTestModeDeviceInfo();
+  },
+};
+
+export default AnythinkModuleBridge;
