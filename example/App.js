@@ -47,7 +47,8 @@ const App: () => Node = () => {
     rewardID = 'b61b166324f190';
     interID = 'b6202409ac5c3d';
     splashID = 'b61c495138b4d6';
-    splashIDDefault = '';
+    splashIDDefault =
+      '{"unit_id":1308103,"nw_firm_id":15,"adapter_class":"ATTTSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"app_id\\":\\"5241633\\",\\"dl_type\\":\\"0\\",\\"personalized_template\\":\\"1\\",\\"slot_id\\":\\"887653543\\",\\"zoomoutad_sw\\":\\"1\\"}"}';
     bannerID = 'b62025e3b119d8';
   }
 
