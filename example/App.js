@@ -36,6 +36,7 @@ const App: () => Node = () => {
   const rewardID = 'b61b16cfd7abae';
   const interID = 'b62023abcd0c9c';
   const splashID = 'b61c4951566e55';
+  const bannerID = 'b62025d72e19ec';
 
   useEffect(() => {
     (async () => {
@@ -50,35 +51,6 @@ const App: () => Node = () => {
         'a61b16cce7d524',
         '97a20b7e3b342cc51bf9ea278a6972af',
       );
-      // if (NativeModules.AnythinkModule) {
-      //   const AnythinkModuleEventEmitter = new NativeEventEmitter(
-      //     NativeModules.AnythinkModule,
-      //   );
-      //   AnythinkModuleEventEmitter.addListener(
-      //     'onRewardVideoAutoLoaded',
-      //     args => {
-      //       console.log(
-      //         '[App] AnythinkModuleEventEmitter',
-      //         'onRewardVideoAutoLoaded',
-      //         args,
-      //       );
-      //     },
-      //   );
-      //   AnythinkModuleEventEmitter.addListener(
-      //     'onRewardVideoAutoLoadFail',
-      //     args => {
-      //       console.log(
-      //         '[App] AnythinkModuleEventEmitter',
-      //         'onRewardVideoAutoLoadFail',
-      //         args,
-      //       );
-      //     },
-      //   );
-      //   console.log(
-      //     '[App] AnythinkModuleEventEmitter',
-      //     AnythinkModuleEventEmitter,
-      //   );
-      // }
       // 添加监听
       if (NativeModules.AnythinkModule) {
         const AnythinkModuleEventEmitter = new NativeEventEmitter(
@@ -93,6 +65,9 @@ const App: () => Node = () => {
                 // 展示开屏广告
                 AnythinkModuleBridge.ATSplashAdLoadAd(splashID);
                 break;
+              case 'onBannerClose':
+                // 隐藏banner
+                AnythinkModuleBridge.ATBannerViewInvisible(bannerID);
             }
           },
         );
@@ -111,7 +86,7 @@ const App: () => Node = () => {
         wInPiexel = Dimensions.get('window').width;
       }
       AnythinkModuleBridge.ATBannerViewInit(
-        'b62025d72e19ec',
+        bannerID,
         JSON.stringify({
           width: wInPiexel,
           height: (wInPiexel * 90) / 600,
@@ -169,6 +144,14 @@ const App: () => Node = () => {
               } else {
                 AnythinkModuleBridge.ATSplashAdShow(splashID);
               }
+            }}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title="Banner"
+            onPress={async () => {
+              AnythinkModuleBridge.ATBannerViewShow(bannerID, 'bottom');
             }}
           />
         </View>

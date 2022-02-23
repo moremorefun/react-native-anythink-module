@@ -1019,6 +1019,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
           return;
         }
         a.addContentView(mBannerView, layoutParams);
+        mBannerView.setVisibility(View.VISIBLE);
       }
     });
   }
