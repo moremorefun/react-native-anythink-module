@@ -499,8 +499,8 @@ RCT_REMAP_METHOD(ATBannerViewShow,
                     (CGRectGetWidth(UIScreen.mainScreen.bounds) - CGRectGetWidth(bannerView.bounds)) / 2.0f,
                     [
                             @{
-                                    @"top": @(at_safeAreaInsets().top),
-                                    @"bottom": @(CGRectGetHeight(UIScreen.mainScreen.bounds) - at_safeAreaInsets().bottom - CGRectGetHeight(bannerView.bounds))
+                                    @"top": @(0),
+                                    @"bottom": @(CGRectGetHeight(UIScreen.mainScreen.bounds) - 0 - CGRectGetHeight(bannerView.bounds))
                             }[position] doubleValue
                     ],
                     CGRectGetWidth(bannerView.bounds),
