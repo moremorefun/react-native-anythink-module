@@ -155,6 +155,14 @@ const App: () => Node = () => {
             }}
           />
         </View>
+        <View style={styles.button}>
+          <Button
+            title="删除Banner"
+            onPress={async () => {
+              AnythinkModuleBridge.ATBannerViewRemove(bannerID);
+            }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
