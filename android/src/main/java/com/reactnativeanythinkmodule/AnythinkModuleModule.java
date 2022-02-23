@@ -770,7 +770,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATBannerViewInit(String placementId, ReadableMap settings) {
+  public void ATBannerViewInitAndLoad(String placementId, ReadableMap settings) {
     ATBannerView helper;
 
     if (!aTBannerViewMap.containsKey(placementId)) {
@@ -886,6 +886,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       }
       aTBannerViewMap.put(placementId, helper);
     }
+    ATBannerViewLoadAd(placementId);
   }
 
   @ReactMethod

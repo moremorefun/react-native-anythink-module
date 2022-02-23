@@ -91,14 +91,14 @@ const App: () => Node = () => {
         5000,
         splashIDDefault,
       );
-      // let wInPiexel = Dimensions.get('window').width * PixelRatio.get();
-      // if (Platform.OS === 'ios') {
-      //   wInPiexel = Dimensions.get('window').width;
-      // }
-      // AnythinkModuleBridge.ATBannerViewInit(bannerID, {
-      //   width: wInPiexel,
-      //   height: (wInPiexel * 90) / 600,
-      // });
+      let wInPiexel = Dimensions.get('window').width * PixelRatio.get();
+      if (Platform.OS === 'ios') {
+        wInPiexel = Dimensions.get('window').width;
+      }
+      AnythinkModuleBridge.ATBannerViewInitAndLoad(bannerID, {
+        width: wInPiexel,
+        height: (wInPiexel * 90) / 600,
+      });
       // AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
     })();
   }, [appID, appKey, bannerID, interID, rewardID, splashID, splashIDDefault]);

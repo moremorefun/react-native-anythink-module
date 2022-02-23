@@ -216,8 +216,8 @@ const AnythinkModuleBridge = {
     AnythinkModule.ATSplashAdCheckSplashDefaultConfigList(placementId);
   },
 
-  ATBannerViewInit: function (placementId: string, settings: any) {
-    AnythinkModule.ATBannerViewInit(placementId, settings);
+  ATBannerViewInitAndLoad: function (placementId: string, settings: any) {
+    AnythinkModule.ATBannerViewInitAndLoad(placementId, settings);
   },
   ATBannerViewSetLocalExtra: function (
     TopOnPlacementID: string,

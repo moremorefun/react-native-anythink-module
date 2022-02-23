@@ -3,6 +3,13 @@
 
 @implementation AnythinkModule
 
+- (NSMutableDictionary *)bannerViews {
+    if (_bannerViews == nil) {
+        _bannerViews = [NSMutableDictionary<NSString *, ATBannerView *> new];
+    }
+    return _bannerViews;
+}
+
 - (UIViewController *)topViewController {
     return [self topViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
 }
@@ -20,6 +27,14 @@
 
     UIViewController *presentedViewController = (UIViewController *) rootViewController.presentedViewController;
     return [self topViewController:presentedViewController];
+}
+
+UIEdgeInsets at_safeAreaInsets() {
+    if (@available(iOS 11.0, *)) {
+        return ([[UIApplication sharedApplication].keyWindow respondsToSelector:@selector(safeAreaInsets)] ? [UIApplication sharedApplication].keyWindow.safeAreaInsets : UIEdgeInsetsZero);
+    }
+
+    return UIEdgeInsetsZero;
 }
 
 RCT_EXPORT_MODULE()
@@ -153,12 +168,7 @@ RCT_REMAP_METHOD(ATSDKSetFilterAdSourceIdList,
             (NSString *) placementID requestIDs:
     (nonnull NSArray*)requestIDs)
 {
-    for (id requestID in requestIDs) {
-        \
-        if ([requestID isKindOfClass:[NSString class]]) {
-            [[ATAdManager sharedManager] extraInfoForPlacementID:placementID requestID:requestID];
-        }
-    }
+    [[ATAdManager sharedManager] setExludePlacementid:placementID unitIDArray:requestIDs];
 }
 
 RCT_REMAP_METHOD(ATRewardVideoAutoAdInit,
@@ -178,8 +188,7 @@ RCT_REMAP_METHOD(ATRewardVideoAutoAdIsAdReady,
             (RCTPromiseRejectBlock) reject)
 {
     BOOL isReady = [[ATRewardedVideoAutoAdManager sharedInstance] autoLoadRewardedVideoReadyForPlacementID:placementID];
-    NSNumber *boolNumber = [NSNumber numberWithBool:isReady];
-    resolve(boolNumber);
+    resolve(@(isReady));
 }
 
 RCT_REMAP_METHOD(ATRewardVideoAutoAdCheckAdStatus,
@@ -192,8 +201,8 @@ RCT_REMAP_METHOD(ATRewardVideoAutoAdCheckAdStatus,
 {
     ATCheckLoadModel *info = [[ATRewardedVideoAutoAdManager sharedInstance] checkRewardedVideoLoadStatusForPlacementID:placementID];
     resolve(@{
-            @"isLoading": [NSNumber numberWithBool:info.isLoading],
-            @"isReady": [NSNumber numberWithBool:info.isReady],
+            @"isLoading": @(info.isLoading),
+            @"isReady": @(info.isReady),
             @"adInfo": info.adOfferInfo
     });
 }
@@ -254,8 +263,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdIsAdReady,
             (RCTPromiseRejectBlock) reject)
 {
     BOOL isReady = [[ATInterstitialAutoAdManager sharedInstance] autoLoadInterstitialReadyForPlacementID:placementID];
-    NSNumber *boolNumber = [NSNumber numberWithBool:isReady];
-    resolve(boolNumber);
+    resolve(@(isReady));
 }
 
 RCT_REMAP_METHOD(ATInterstitialAutoAdCheckAdStatus,
@@ -268,8 +276,8 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdCheckAdStatus,
 {
     ATCheckLoadModel *info = [[ATInterstitialAutoAdManager sharedInstance] checkInterstitialLoadStatusForPlacementID:placementID];
     resolve(@{
-            @"isLoading": [NSNumber numberWithBool:info.isLoading],
-            @"isReady": [NSNumber numberWithBool:info.isReady],
+            @"isLoading": @(info.isLoading),
+            @"isReady": @(info.isReady),
             @"adInfo": info.adOfferInfo
     });
 }
@@ -351,12 +359,11 @@ RCT_REMAP_METHOD(ATSplashAdIsAdReady,
             (RCTPromiseRejectBlock) reject)
 {
     BOOL isReady = [[ATAdManager sharedManager] splashReadyForPlacementID:placementID];
-    NSNumber *boolNumber = [NSNumber numberWithBool:isReady];
-    resolve(boolNumber);
+    resolve(@(isReady));
 }
 
 RCT_REMAP_METHOD(ATSplashAdCheckAdStatus,
-                 checkSplashLoadStatusForPlacementID:
+            checkSplashLoadStatusForPlacementID:
             (NSString *) placementID
             withResolver:
             (RCTPromiseResolveBlock) resolve
@@ -365,35 +372,35 @@ RCT_REMAP_METHOD(ATSplashAdCheckAdStatus,
 {
     ATCheckLoadModel *info = [[ATAdManager sharedManager] checkSplashLoadStatusForPlacementID:placementID];
     resolve(@{
-            @"isLoading": [NSNumber numberWithBool:info.isLoading],
-            @"isReady": [NSNumber numberWithBool:info.isReady],
+            @"isLoading": @(info.isLoading),
+            @"isReady": @(info.isReady),
             @"adInfo": info.adOfferInfo
     });
 }
 
 RCT_REMAP_METHOD(ATSplashAdLoadAd,
-                 splashAdLoadAd:
+            splashAdLoadAd:
             (NSString *) placementID)
 {
-    [[ATAdManager sharedManager] loadADWithPlacementID:placementID extra:@{} delegate:self];
+    [self loadSplashADWithPlacementID:placementID fetchAdTimeout:5000.0f defaultAdSourceConfig:@""];
 }
 
 RCT_REMAP_METHOD(ATSplashAdShow,
-                 showSplashWithPlacementID:
+            showSplashWithPlacementID:
             (NSString *) placementID)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIWindow *mainWindow = nil;
-                if ( @available(iOS 13.0, *) ) {
-                    mainWindow = [UIApplication sharedApplication].windows.firstObject;
-                    [mainWindow makeKeyWindow];
-                }else {
-                    mainWindow = [UIApplication sharedApplication].keyWindow;
-                }
+        if (@available(iOS 13.0, *)) {
+            mainWindow = [UIApplication sharedApplication].windows.firstObject;
+            [mainWindow makeKeyWindow];
+        } else {
+            mainWindow = [UIApplication sharedApplication].keyWindow;
+        }
         NSDictionary *extra = @{
-                    kATSplashExtraCountdownKey : @50000,
-                    kATSplashExtraCountdownIntervalKey : @500
-                };
+                kATSplashExtraCountdownKey: @50000,
+                kATSplashExtraCountdownIntervalKey: @500
+        };
         [[ATAdManager sharedManager] showSplashWithPlacementID:placementID
                                                         window:mainWindow
                                                          extra:extra
@@ -403,17 +410,155 @@ RCT_REMAP_METHOD(ATSplashAdShow,
 }
 
 RCT_REMAP_METHOD(ATSplashAdHide,
-                 hideSplashWithPlacementID:
+            hideSplashWithPlacementID:
             (NSString *) placementID)
 {
-    
+
 }
 
 RCT_REMAP_METHOD(ATSplashAdCheckSplashDefaultConfigList,
-                 checkAdSourceList:
+            checkAdSourceList:
             (NSString *) placementID)
 {
     [[ATAdManager sharedManager] checkAdSourceList:placementID];
+}
+
+RCT_REMAP_METHOD(ATBannerViewInitAndLoad,
+            loadBannerADWithPlacementID:
+            (NSString *) placementID
+            withSettings:
+            (NSDictionary *) settings)
+{
+    NSDictionary *extra = @{
+            kATAdLoadingExtraBannerAdSizeKey: [NSValue valueWithCGSize:CGSizeMake([settings[@"width"] doubleValue], [settings[@"height"] doubleValue])]
+    };
+    // 加载banner广告
+    [[ATAdManager sharedManager] loadADWithPlacementID:placementID
+                                                 extra:extra
+                                              delegate:self
+    ];
+
+}
+
+RCT_REMAP_METHOD(ATBannerViewSetLocalExtra,
+            bannerSetCustomData:
+            (NSString *) placementID
+            withExtra:
+            (NSDictionary *) extra)
+{
+    [[ATAPI sharedInstance] setCustomData:extra forPlacementID:placementID];
+}
+
+RCT_REMAP_METHOD(ATBannerViewLoadAd,
+            bannerAdLoadAd:
+            (NSString *) placementID)
+{
+    [self loadBannerADWithPlacementID:placementID withSettings:@{}];
+}
+
+RCT_REMAP_METHOD(ATBannerViewDestroy,
+            bannerDestroy:
+            (NSString *) placementID)
+{
+}
+
+RCT_REMAP_METHOD(ATBannerViewCheckAdStatus,
+            checkBannerLoadStatusForPlacementID:
+            (NSString *) placementID
+            withResolver:
+            (RCTPromiseResolveBlock) resolve
+            withRejecter:
+            (RCTPromiseRejectBlock) reject)
+{
+    ATCheckLoadModel *info = [[ATAdManager sharedManager] checkSplashLoadStatusForPlacementID:placementID];
+    resolve(@{
+            @"isLoading": @(info.isLoading),
+            @"isReady": @(info.isReady),
+            @"adInfo": info.adOfferInfo
+    });
+}
+
+RCT_REMAP_METHOD(ATBannerViewShow,
+            aTBannerViewShow:
+            (NSString *) placementID
+            withPosition:
+            (NSString *) position
+)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ATBannerView *bannerView = [self.bannerViews valueForKey:placementID];
+        if (bannerView != nil) {
+            [bannerView removeFromSuperview];
+        } else {
+            bannerView = [[ATAdManager sharedManager] retrieveBannerViewForPlacementID:placementID];
+        }
+        if (bannerView != nil) {
+            self.bannerViews[placementID] = bannerView;
+            bannerView.delegate = self;
+            bannerView.frame = CGRectMake(
+                    (CGRectGetWidth(UIScreen.mainScreen.bounds) - CGRectGetWidth(bannerView.bounds)) / 2.0f,
+                    [
+                            @{
+                                    @"top": @(at_safeAreaInsets().top),
+                                    @"bottom": @(CGRectGetHeight(UIScreen.mainScreen.bounds) - at_safeAreaInsets().bottom - CGRectGetHeight(bannerView.bounds))
+                            }[position] doubleValue
+                    ],
+                    CGRectGetWidth(bannerView.bounds),
+                    CGRectGetHeight(bannerView.bounds)
+            );
+
+            UIWindow *mainWindow = nil;
+            if (@available(iOS 13.0, *)) {
+                mainWindow = [UIApplication sharedApplication].windows.firstObject;
+                [mainWindow makeKeyWindow];
+            } else {
+                mainWindow = [UIApplication sharedApplication].keyWindow;
+            }
+            [mainWindow addSubview:bannerView];
+            bannerView.hidden = NO;
+        }
+    });
+}
+
+RCT_REMAP_METHOD(ATBannerViewVisible,
+            bannerVisible:
+            (NSString *) placementID
+)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ATBannerView *bannerView = [self.bannerViews valueForKey:placementID];
+        if (bannerView != nil) {
+            bannerView.hidden = NO;
+        }
+    });
+}
+
+RCT_REMAP_METHOD(ATBannerViewInvisible,
+            aTBannerViewInvisible:
+            (NSString *) placementID
+)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ATBannerView *bannerView = [self.bannerViews valueForKey:placementID];
+        if (bannerView != nil) {
+            bannerView.hidden = YES;
+        }
+    });
+}
+
+RCT_REMAP_METHOD(ATBannerViewRemove,
+            aTBannerViewRemove:
+            (NSString *) placementID
+)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ATBannerView *bannerView = [self.bannerViews valueForKey:placementID];
+
+        if (bannerView != nil) {
+            [bannerView removeFromSuperview];
+        }
+
+    });
 }
 
 // MARK:- ATAdLoadingDelegate
@@ -434,7 +579,7 @@ RCT_REMAP_METHOD(ATSplashAdCheckSplashDefaultConfigList,
     [self sendEventWithName:@"onSplashAdLoaded"
                        body:@{
                                @"placementId": placementID,
-                               @"isTimeout": [NSNumber numberWithBool:isTimeout]
+                               @"isTimeout": @(isTimeout)
                        }];
 }
 
@@ -655,6 +800,55 @@ RCT_REMAP_METHOD(ATSplashAdCheckSplashDefaultConfigList,
 
 - (void)splashZoomOutViewDidCloseForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
 
+}
+
+// MARK:- ATBannerDelegate
+- (void)bannerView:(ATBannerView *)bannerView didAutoRefreshWithPlacement:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onBannerAutoRefreshed"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)bannerView:(ATBannerView *)bannerView didClickWithPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onBannerClicked"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)bannerView:(ATBannerView *)bannerView didCloseWithPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+
+}
+
+- (void)bannerView:(ATBannerView *)bannerView didDeepLinkOrJumpForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra result:(BOOL)success {
+
+}
+
+- (void)bannerView:(ATBannerView *)bannerView didShowAdWithPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onBannerShow"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)bannerView:(ATBannerView *)bannerView didTapCloseButtonWithPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onBannerClose"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)bannerView:(ATBannerView *)bannerView failedToAutoRefreshWithPlacementID:(NSString *)placementID error:(NSError *)error {
+    [self sendEventWithName:@"onBannerAutoRefreshFail"
+                       body:@{
+                               @"placementId": placementID,
+                               @"adError": error.description
+                       }];
 }
 
 @end
