@@ -35,19 +35,16 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @ReactModule(name = AnythinkModuleModule.NAME)
 public class AnythinkModuleModule extends ReactContextBaseJavaModule {
@@ -60,28 +57,6 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
   public AnythinkModuleModule(ReactApplicationContext reactContext) {
     super(reactContext);
-  }
-
-  public static Map<String, Object> convertToMap(String jsonString) {
-    JSONObject jsonObject;
-    try {
-      jsonObject = new JSONObject(jsonString);
-      @SuppressWarnings("unchecked")
-      Iterator<String> keyIter = jsonObject.keys();
-      String key;
-      Object value;
-      Map<String, Object> valueMap = new HashMap<String, Object>();
-      while (keyIter.hasNext()) {
-        key = (String) keyIter.next();
-        value = jsonObject.get(key);
-        valueMap.put(key, value);
-      }
-      return valueMap;
-    } catch (JSONException e) {
-      e.printStackTrace();
-      Log.e(NAME, "json string to map err: " + e.toString() + " str: " + jsonString);
-    }
-    return null;
   }
 
   public static String[] convertToStrings(ReadableArray arr) {
@@ -168,13 +143,13 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATSDKInitCustomMap(String customMap) {
-    ATSDK.initCustomMap(convertToMap(customMap));
+  public void ATSDKInitCustomMap(ReadableMap customMap) {
+    ATSDK.initCustomMap(customMap.toHashMap());
   }
 
   @ReactMethod
-  public void ATSDKInitPlacementCustomMap(String TopOnPlacementID, String customMap) {
-    ATSDK.initPlacementCustomMap(TopOnPlacementID, convertToMap(customMap));
+  public void ATSDKInitPlacementCustomMap(String TopOnPlacementID, ReadableMap customMap) {
+    ATSDK.initPlacementCustomMap(TopOnPlacementID, customMap.toHashMap());
   }
 
   @ReactMethod
@@ -361,8 +336,8 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATRewardVideoAutoSetLocalExtra(String placementId, String localExtra) {
-    ATRewardVideoAutoAd.setLocalExtra(placementId, convertToMap(localExtra));
+  public void ATRewardVideoAutoSetLocalExtra(String placementId, ReadableMap localExtra) {
+    ATRewardVideoAutoAd.setLocalExtra(placementId, localExtra.toHashMap());
   }
 
   @ReactMethod
@@ -528,8 +503,8 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATInterstitialAutoAdSetLocalExtra(String placementId, String localExtra) {
-    ATInterstitialAutoAd.setLocalExtra(placementId, convertToMap(localExtra));
+  public void ATInterstitialAutoAdSetLocalExtra(String placementId, ReadableMap localExtra) {
+    ATInterstitialAutoAd.setLocalExtra(placementId, localExtra.toHashMap());
   }
 
   @ReactMethod
@@ -630,7 +605,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATSplashAdSetLocalExtra(String placementId, String localExtra) {
+  public void ATSplashAdSetLocalExtra(String placementId, ReadableMap localExtra) {
     if (!aTSplashAdMap.containsKey(placementId)) {
       Log.e(NAME, "ATSplashAdSetLocalExtra placementId: " + placementId + " ad==null");
       return;
@@ -640,7 +615,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       Log.e(NAME, "ATSplashAdSetLocalExtra placementId: " + placementId + " ad==null");
       return;
     }
-    ad.setLocalExtra(convertToMap(localExtra));
+    ad.setLocalExtra(localExtra.toHashMap());
   }
 
   @ReactMethod
@@ -794,7 +769,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATBannerViewInit(String placementId, String settings) {
+  public void ATBannerViewInit(String placementId, ReadableMap settings) {
     ATBannerView helper;
 
     if (!aTBannerViewMap.containsKey(placementId)) {
@@ -895,16 +870,8 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       });
 
       try {
-        JSONObject jsonObject = new JSONObject(settings);
-        int width = 0;
-        int height = 0;
-
-        if (jsonObject.has(Const.WIDTH)) {
-          width = jsonObject.optInt(Const.WIDTH);
-        }
-        if (jsonObject.has(Const.HEIGHT)) {
-          height = jsonObject.optInt(Const.HEIGHT);
-        }
+        int width = settings.getInt(Const.WIDTH);
+        int height = settings.getInt(Const.HEIGHT);
         if (helper.getLayoutParams() == null) {
           FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
           helper.setLayoutParams(lp);
@@ -921,7 +888,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATBannerViewSetLocalExtra(String placementId, String localExtra) {
+  public void ATBannerViewSetLocalExtra(String placementId, ReadableMap localExtra) {
     if (!aTBannerViewMap.containsKey(placementId)) {
       Log.e(NAME, "ATBannerViewSetLocalExtra placementId: " + placementId + " ad==null");
       return;
@@ -931,7 +898,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       Log.e(NAME, "ATBannerViewSetLocalExtra placementId: " + placementId + " ad==null");
       return;
     }
-    ad.setLocalExtra(convertToMap(localExtra));
+    ad.setLocalExtra(localExtra.toHashMap());
   }
 
   @ReactMethod

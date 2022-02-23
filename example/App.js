@@ -87,10 +87,10 @@ const App: () => Node = () => {
       }
       AnythinkModuleBridge.ATBannerViewInit(
         bannerID,
-        JSON.stringify({
+        {
           width: wInPiexel,
           height: (wInPiexel * 90) / 600,
-        }),
+        },
       );
       AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
     })();

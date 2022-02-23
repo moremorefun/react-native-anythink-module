@@ -95,12 +95,12 @@ const AnythinkModuleBridge = {
   ATSDKSetSubChannel: function (subChannel: string) {
     AnythinkModule.ATSDKSetSubChannel(subChannel);
   },
-  ATSDKInitCustomMap: function (customMap: string) {
+  ATSDKInitCustomMap: function (customMap: any) {
     AnythinkModule.ATSDKInitCustomMap(customMap);
   },
   ATSDKInitPlacementCustomMap: function (
     TopOnPlacementID: string,
-    customMap: string
+    customMap: any
   ) {
     AnythinkModule.ATSDKInitPlacementCustomMap(TopOnPlacementID, customMap);
   },
@@ -138,7 +138,7 @@ const AnythinkModuleBridge = {
   },
   ATRewardVideoAutoSetLocalExtra: function (
     TopOnPlacementID: string,
-    customMap: string
+    customMap: any
   ) {
     AnythinkModule.ATRewardVideoAutoSetLocalExtra(TopOnPlacementID, customMap);
   },
@@ -167,7 +167,7 @@ const AnythinkModuleBridge = {
   },
   ATInterstitialAutoAdSetLocalExtra: function (
     TopOnPlacementID: string,
-    customMap: string
+    customMap: any
   ) {
     AnythinkModule.ATInterstitialAutoAdSetLocalExtra(
       TopOnPlacementID,
@@ -188,7 +188,7 @@ const AnythinkModuleBridge = {
   },
   ATSplashAdSetLocalExtra: function (
     TopOnPlacementID: string,
-    customMap: string
+    customMap: any
   ) {
     AnythinkModule.ATSplashAdSetLocalExtra(TopOnPlacementID, customMap);
   },
@@ -213,12 +213,12 @@ const AnythinkModuleBridge = {
     AnythinkModule.ATSplashAdCheckSplashDefaultConfigList(placementId);
   },
 
-  ATBannerViewInit: function (placementId: string, settings: string) {
+  ATBannerViewInit: function (placementId: string, settings: any) {
     AnythinkModule.ATBannerViewInit(placementId, settings);
   },
   ATBannerViewSetLocalExtra: function (
     TopOnPlacementID: string,
-    customMap: string
+    customMap: any
   ) {
     AnythinkModule.ATBannerViewSetLocalExtra(TopOnPlacementID, customMap);
   },
