@@ -37,6 +37,9 @@ const AnythinkModuleBridge = {
         })
       );
     }
+    add('onAdLoaded');
+    add('onAdLoadFail');
+
     add('onRewardVideoAutoLoaded');
     add('onRewardVideoAutoLoadFail');
     add('onRewardedVideoAdPlayStart');

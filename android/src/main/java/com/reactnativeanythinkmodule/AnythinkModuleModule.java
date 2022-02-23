@@ -185,7 +185,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         AnythinkModuleModule.this.
           getReactApplicationContext().
           getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-          "onRewardVideoAutoLoaded",
+          "onAdLoaded",
           placementId
         );
       }
@@ -198,7 +198,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         AnythinkModuleModule.this.
           getReactApplicationContext().
           getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-          "onRewardVideoAutoLoadFail",
+          "onAdLoadFail",
           writableMap
         );
       }
@@ -353,7 +353,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         AnythinkModuleModule.this.
           getReactApplicationContext().
           getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-          "onInterstitialAutoLoaded",
+          "onAdLoaded",
           s
         );
       }
@@ -366,7 +366,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         AnythinkModuleModule.this.
           getReactApplicationContext().
           getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-          "onInterstitialAutoLoadFail",
+          "onAdLoadFail",
           writableMap
         );
       }
@@ -785,7 +785,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
           AnythinkModuleModule.this.
             getReactApplicationContext().
             getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-            "onBannerLoaded",
+            "onAdLoaded",
             placementId
           );
         }
@@ -798,7 +798,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
           AnythinkModuleModule.this.
             getReactApplicationContext().
             getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-            "onBannerFailed",
+            "onAdLoadFail",
             writableMap
           );
         }

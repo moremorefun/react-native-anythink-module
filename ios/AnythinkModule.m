@@ -26,6 +26,9 @@ RCT_EXPORT_MODULE()
 
 - (NSArray<NSString *> *)supportedEvents {
     return @[
+            @"onAdLoaded",
+            @"onAdLoadFail",
+
             @"onRewardVideoAutoLoaded",
             @"onRewardVideoAutoLoadFail",
             @"onRewardedVideoAdPlayStart",
@@ -235,7 +238,7 @@ RCT_REMAP_METHOD(ATRewardVideoAutoSetLocalExtra,
 }
 
 RCT_REMAP_METHOD(ATInterstitialAutoAdInit,
-                 aTInterstitialAutoAdManagerInit:
+            aTInterstitialAutoAdManagerInit:
             (NSArray *) placementIDs)
 {
     [ATInterstitialAutoAdManager sharedInstance].delegate = self;
@@ -243,7 +246,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdInit,
 }
 
 RCT_REMAP_METHOD(ATInterstitialAutoAdIsAdReady,
-                 autoLoadInterstitialReadyForPlacementID:
+            autoLoadInterstitialReadyForPlacementID:
             (NSString *) placementID
             withResolver:
             (RCTPromiseResolveBlock) resolve
@@ -256,7 +259,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdIsAdReady,
 }
 
 RCT_REMAP_METHOD(ATInterstitialAutoAdCheckAdStatus,
-                 checkInterstitialLoadStatusForPlacementID:
+            checkInterstitialLoadStatusForPlacementID:
             (NSString *) placementID
             withResolver:
             (RCTPromiseResolveBlock) resolve
@@ -272,14 +275,14 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdCheckAdStatus,
 }
 
 RCT_REMAP_METHOD(ATInterstitialAutoAdShow,
-                 showAutoLoadInterstitialWithPlacementID:
+            showAutoLoadInterstitialWithPlacementID:
             (NSString *) placementID)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[ATInterstitialAutoAdManager sharedInstance]
-         showAutoLoadInterstitialWithPlacementID:placementID
-                                        inViewController:[self topViewController]
-                                                delegate:self
+                showAutoLoadInterstitialWithPlacementID:placementID
+                                       inViewController:[self topViewController]
+                                               delegate:self
         ];
     });
 }
@@ -299,7 +302,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdRemovePlacementId,
 }
 
 RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
-                 interstitialSetLocalExtra:
+            interstitialSetLocalExtra:
             (NSString *) placementID
             withExtra:
             (NSDictionary *) extra)
@@ -312,7 +315,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
 
 // MARK:- ATAdLoadingDelegate
 - (void)didFailToLoadADWithPlacementID:(NSString *)placementID error:(NSError *)error {
-    [self sendEventWithName:@"onRewardVideoAutoLoadFail"
+    [self sendEventWithName:@"onAdLoadFail"
                        body:@{
                                @"placementId": placementID,
                                @"adError": error
@@ -320,7 +323,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
 }
 
 - (void)didFinishLoadingADWithPlacementID:(NSString *)placementID {
-    [self sendEventWithName:@"onRewardVideoAutoLoaded" body:placementID];
+    [self sendEventWithName:@"onAdLoaded" body:placementID];
 }
 
 
@@ -428,11 +431,11 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
 }
 
 // MARK:- ATInterstitialDelegate
-- (void)interstitialDeepLinkOrJumpForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra result:(BOOL)success { 
-    
+- (void)interstitialDeepLinkOrJumpForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra result:(BOOL)success {
+
 }
 
-- (void)interstitialDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+- (void)interstitialDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdClicked"
                        body:@{
                                @"placementId": placementID,
@@ -440,7 +443,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        }];
 }
 
-- (void)interstitialDidCloseForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+- (void)interstitialDidCloseForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdClose"
                        body:@{
                                @"placementId": placementID,
@@ -448,7 +451,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        }];
 }
 
-- (void)interstitialDidEndPlayingVideoForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+- (void)interstitialDidEndPlayingVideoForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdVideoEnd"
                        body:@{
                                @"placementId": placementID,
@@ -456,7 +459,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        }];
 }
 
-- (void)interstitialDidFailToPlayVideoForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra { 
+- (void)interstitialDidFailToPlayVideoForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdVideoError"
                        body:@{
                                @"placementId": placementID,
@@ -465,7 +468,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        }];
 }
 
-- (void)interstitialDidShowForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+- (void)interstitialDidShowForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdShow"
                        body:@{
                                @"placementId": placementID,
@@ -473,7 +476,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        }];
 }
 
-- (void)interstitialDidStartPlayingVideoForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+- (void)interstitialDidStartPlayingVideoForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdVideoStart"
                        body:@{
                                @"placementId": placementID,
@@ -481,7 +484,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        }];
 }
 
-- (void)interstitialFailedToShowForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra { 
+- (void)interstitialFailedToShowForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra {
     [self sendEventWithName:@"onInterstitialAdVideoError"
                        body:@{
                                @"placementId": placementID,
