@@ -81,7 +81,7 @@ const App: () => Node = () => {
       }
       // // 加载广告
       AnythinkModuleBridge.ATRewardVideoAutoAdInit([rewardID]);
-      // AnythinkModuleBridge.ATInterstitialAutoAdInit([interID]);
+      AnythinkModuleBridge.ATInterstitialAutoAdInit([interID]);
       // AnythinkModuleBridge.ATSplashAdInit(
       //   splashID,
       //   5000,
@@ -98,7 +98,7 @@ const App: () => Node = () => {
       // });
       // AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
     })();
-  }, [appID, appKey, bannerID, rewardID, splashID]);
+  }, [appID, appKey, bannerID, interID, rewardID, splashID]);
 
   return (
     <SafeAreaView style={backgroundStyle}>

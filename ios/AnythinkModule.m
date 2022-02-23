@@ -234,6 +234,82 @@ RCT_REMAP_METHOD(ATRewardVideoAutoSetLocalExtra,
     ];
 }
 
+RCT_REMAP_METHOD(ATInterstitialAutoAdInit,
+                 aTInterstitialAutoAdManagerInit:
+            (NSArray *) placementIDs)
+{
+    [ATInterstitialAutoAdManager sharedInstance].delegate = self;
+    [[ATInterstitialAutoAdManager sharedInstance] addAutoLoadAdPlacementIDArray:placementIDs];
+}
+
+RCT_REMAP_METHOD(ATInterstitialAutoAdIsAdReady,
+                 autoLoadInterstitialReadyForPlacementID:
+            (NSString *) placementID
+            withResolver:
+            (RCTPromiseResolveBlock) resolve
+            withRejecter:
+            (RCTPromiseRejectBlock) reject)
+{
+    BOOL isReady = [[ATInterstitialAutoAdManager sharedInstance] autoLoadInterstitialReadyForPlacementID:placementID];
+    NSNumber *boolNumber = [NSNumber numberWithBool:isReady];
+    resolve(boolNumber);
+}
+
+RCT_REMAP_METHOD(ATInterstitialAutoAdCheckAdStatus,
+                 checkInterstitialLoadStatusForPlacementID:
+            (NSString *) placementID
+            withResolver:
+            (RCTPromiseResolveBlock) resolve
+            withRejecter:
+            (RCTPromiseRejectBlock) reject)
+{
+    ATCheckLoadModel *info = [[ATInterstitialAutoAdManager sharedInstance] checkInterstitialLoadStatusForPlacementID:placementID];
+    resolve(@{
+            @"isLoading": [NSNumber numberWithBool:info.isLoading],
+            @"isReady": [NSNumber numberWithBool:info.isReady],
+            @"adInfo": info.adOfferInfo
+    });
+}
+
+RCT_REMAP_METHOD(ATInterstitialAutoAdShow,
+                 showAutoLoadInterstitialWithPlacementID:
+            (NSString *) placementID)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[ATInterstitialAutoAdManager sharedInstance]
+         showAutoLoadInterstitialWithPlacementID:placementID
+                                        inViewController:[self topViewController]
+                                                delegate:self
+        ];
+    });
+}
+
+RCT_REMAP_METHOD(ATInterstitialAutoAdAddPlacementId,
+            addInterstitialAutoLoadAdPlacementIDArray:
+            (NSArray *) placementIDArray)
+{
+    [[ATInterstitialAutoAdManager sharedInstance] addAutoLoadAdPlacementIDArray:placementIDArray];
+}
+
+RCT_REMAP_METHOD(ATInterstitialAutoAdRemovePlacementId,
+            removeInterstitialAutoLoadAdPlacementIDArray:
+            (NSArray *) placementIDArray)
+{
+    [[ATInterstitialAutoAdManager sharedInstance] removeAutoLoadAdPlacementIDArray:placementIDArray];
+}
+
+RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
+                 interstitialSetLocalExtra:
+            (NSString *) placementID
+            withExtra:
+            (NSDictionary *) extra)
+{
+    [[ATInterstitialAutoAdManager sharedInstance]
+            setLocalExtra:extra
+              placementID:placementID
+    ];
+}
+
 // MARK:- ATAdLoadingDelegate
 - (void)didFailToLoadADWithPlacementID:(NSString *)placementID error:(NSError *)error {
     [self sendEventWithName:@"onRewardVideoAutoLoadFail"
@@ -348,6 +424,69 @@ RCT_REMAP_METHOD(ATRewardVideoAutoSetLocalExtra,
                        body:@{
                                @"placementId": placementID,
                                @"atAdInfo": extra
+                       }];
+}
+
+// MARK:- ATInterstitialDelegate
+- (void)interstitialDeepLinkOrJumpForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra result:(BOOL)success { 
+    
+}
+
+- (void)interstitialDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdClicked"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)interstitialDidCloseForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdClose"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)interstitialDidEndPlayingVideoForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdVideoEnd"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)interstitialDidFailToPlayVideoForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdVideoError"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra,
+                               @"adError": error
+                       }];
+}
+
+- (void)interstitialDidShowForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdShow"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)interstitialDidStartPlayingVideoForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdVideoStart"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)interstitialFailedToShowForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra { 
+    [self sendEventWithName:@"onInterstitialAdVideoError"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra,
+                               @"adError": error
                        }];
 }
 
