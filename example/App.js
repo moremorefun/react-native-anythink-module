@@ -9,6 +9,7 @@
 import React, {useEffect} from 'react';
 import type {Node} from 'react';
 import {
+  Button,
   Dimensions,
   NativeEventEmitter,
   NativeModules,
@@ -18,6 +19,8 @@ import {
   ScrollView,
   StatusBar,
   useColorScheme,
+  StyleSheet,
+  View,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -29,6 +32,10 @@ const App: () => Node = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const rewardID = 'b61b16cfd7abae';
+  const interID = 'b62023abcd0c9c';
+  const splashID = 'b61c4951566e55';
 
   useEffect(() => {
     (async () => {
@@ -81,14 +88,20 @@ const App: () => Node = () => {
           AnythinkModuleEventEmitter,
           (type, args) => {
             console.log('[App] AnythinkModuleEventEmitter', type, args);
+            switch (type) {
+              case 'onSplashAdShow':
+                // 展示开屏广告
+                AnythinkModuleBridge.ATSplashAdLoadAd(splashID);
+                break;
+            }
           },
         );
       }
       // 加载广告
-      AnythinkModuleBridge.ATRewardVideoAutoAdInit(['b61b16cfd7abae']);
-      AnythinkModuleBridge.ATInterstitialAutoAdInit(['b62023abcd0c9c']);
+      AnythinkModuleBridge.ATRewardVideoAutoAdInit([rewardID]);
+      AnythinkModuleBridge.ATInterstitialAutoAdInit([interID]);
       AnythinkModuleBridge.ATSplashAdInit(
-        'b61c4951566e55',
+        splashID,
         5000,
         '{"unit_id":1308102,"nw_firm_id":15,"adapter_class":"com.anythink.network.toutiao.TTATSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"dl_type\\":\\"0\\",\\"slot_id\\":\\"887668414\\",\\"personalized_template\\":\\"0\\",\\"zoomoutad_sw\\":\\"1\\",\\"app_id\\":\\"5261386\\"}"}',
       );
@@ -111,9 +124,63 @@ const App: () => Node = () => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView />
+      <ScrollView>
+        <View style={styles.button}>
+          <Button
+            title="激励视频"
+            onPress={async () => {
+              const isReady =
+                await AnythinkModuleBridge.ATRewardVideoAutoAdIsAdReady(
+                  rewardID,
+                );
+              if (!isReady) {
+                alert('激励视频未准备好');
+              } else {
+                AnythinkModuleBridge.ATRewardVideoAutoAdShow(rewardID);
+              }
+            }}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title="插屏"
+            onPress={async () => {
+              const isReady =
+                await AnythinkModuleBridge.ATInterstitialAutoAdIsAdReady(
+                  interID,
+                );
+              if (!isReady) {
+                alert('插屏未准备好');
+              } else {
+                AnythinkModuleBridge.ATInterstitialAutoAdShow(interID);
+              }
+            }}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title="开屏"
+            onPress={async () => {
+              const isReady = await AnythinkModuleBridge.ATSplashAdIsAdReady(
+                splashID,
+              );
+              if (!isReady) {
+                alert('开屏未准备好');
+              } else {
+                AnythinkModuleBridge.ATSplashAdShow(splashID);
+              }
+            }}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    margin: 20,
+  },
+});
 
 export default App;

@@ -605,10 +605,15 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
 
           @Override
           public void onAdDismiss(ATAdInfo atAdInfo, IATSplashEyeAd iatSplashEyeAd) {
+            // 关闭插屏
+            AnythinkModuleModule.this.ATSplashAdHide(placementId);
+
             WritableMap writableMap = Arguments.createMap();
             writableMap.putString("placementId", placementId);
             writableMap.putString("atAdInfo", atAdInfo.toString());
-            writableMap.putString("iatSplashEyeAd", iatSplashEyeAd.toString());
+            if (iatSplashEyeAd != null) {
+              writableMap.putString("iatSplashEyeAd", iatSplashEyeAd.toString());
+            }
             AnythinkModuleModule.this.
               getReactApplicationContext().
               getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
@@ -712,6 +717,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         Dialog dialog;
         if (!aTSplashAdDialogMap.containsKey(placementId)) {
           dialog = new Dialog(a, R.style.SplashScreen_SplashTheme);
+          dialog.setOwnerActivity(a);
           dialog.setContentView(R.layout.splash_screen);
           dialog.setCancelable(false);
           aTSplashAdDialogMap.put(placementId, dialog);
