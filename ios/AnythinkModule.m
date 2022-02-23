@@ -1,6 +1,5 @@
 #import "AnythinkModule.h"
 #import <CoreData/CoreData.h>
-#import <AnyThinkSDK/AnyThinkSDK.h>
 
 @implementation AnythinkModule
 
