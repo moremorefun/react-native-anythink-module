@@ -33,10 +33,20 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const rewardID = 'b61b16cfd7abae';
-  const interID = 'b62023abcd0c9c';
-  const splashID = 'b61c4951566e55';
-  const bannerID = 'b62025d72e19ec';
+  let appID = 'a61b16cce7d524';
+  let appKey = '97a20b7e3b342cc51bf9ea278a6972af';
+  let rewardID = 'b61b16cfd7abae';
+  let interID = 'b62023abcd0c9c';
+  let splashID = 'b61c4951566e55';
+  let bannerID = 'b62025d72e19ec';
+  if (Platform.OS === 'ios') {
+    appID = 'a61b166188a9b4';
+    appKey = '97a20b7e3b342cc51bf9ea278a6972af';
+    rewardID = 'b61b166324f190';
+    interID = 'b6202409ac5c3d';
+    splashID = 'b61c495138b4d6';
+    bannerID = 'b62025e3b119d8';
+  }
 
   useEffect(() => {
     (async () => {
@@ -47,10 +57,7 @@ const App: () => Node = () => {
         AnythinkModuleBridge.ATSDKIntegrationChecking();
       }
       // 初始化SDK
-      AnythinkModuleBridge.ATSDKInit(
-        'a61b16cce7d524',
-        '97a20b7e3b342cc51bf9ea278a6972af',
-      );
+      AnythinkModuleBridge.ATSDKInit(appID, appKey);
       // 添加监听
       if (NativeModules.AnythinkModule) {
         const AnythinkModuleEventEmitter = new NativeEventEmitter(
@@ -72,29 +79,26 @@ const App: () => Node = () => {
           },
         );
       }
-      // 加载广告
+      // // 加载广告
       AnythinkModuleBridge.ATRewardVideoAutoAdInit([rewardID]);
-      AnythinkModuleBridge.ATInterstitialAutoAdInit([interID]);
-      AnythinkModuleBridge.ATSplashAdInit(
-        splashID,
-        5000,
-        '{"unit_id":1308102,"nw_firm_id":15,"adapter_class":"com.anythink.network.toutiao.TTATSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"dl_type\\":\\"0\\",\\"slot_id\\":\\"887668414\\",\\"personalized_template\\":\\"0\\",\\"zoomoutad_sw\\":\\"1\\",\\"app_id\\":\\"5261386\\"}"}',
-      );
-      AnythinkModuleBridge.ATSplashAdLoadAd('b61c4951566e55');
-      let wInPiexel = Dimensions.get('window').width * PixelRatio.get();
-      if (Platform.OS === 'ios') {
-        wInPiexel = Dimensions.get('window').width;
-      }
-      AnythinkModuleBridge.ATBannerViewInit(
-        bannerID,
-        {
-          width: wInPiexel,
-          height: (wInPiexel * 90) / 600,
-        },
-      );
-      AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
+      // AnythinkModuleBridge.ATInterstitialAutoAdInit([interID]);
+      // AnythinkModuleBridge.ATSplashAdInit(
+      //   splashID,
+      //   5000,
+      //   '{"unit_id":1308102,"nw_firm_id":15,"adapter_class":"com.anythink.network.toutiao.TTATSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"dl_type\\":\\"0\\",\\"slot_id\\":\\"887668414\\",\\"personalized_template\\":\\"0\\",\\"zoomoutad_sw\\":\\"1\\",\\"app_id\\":\\"5261386\\"}"}',
+      // );
+      // AnythinkModuleBridge.ATSplashAdLoadAd('b61c4951566e55');
+      // let wInPiexel = Dimensions.get('window').width * PixelRatio.get();
+      // if (Platform.OS === 'ios') {
+      //   wInPiexel = Dimensions.get('window').width;
+      // }
+      // AnythinkModuleBridge.ATBannerViewInit(bannerID, {
+      //   width: wInPiexel,
+      //   height: (wInPiexel * 90) / 600,
+      // });
+      // AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
     })();
-  }, []);
+  }, [appID, appKey, bannerID, rewardID, splashID]);
 
   return (
     <SafeAreaView style={backgroundStyle}>
