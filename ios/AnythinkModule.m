@@ -198,9 +198,35 @@ RCT_REMAP_METHOD(ATRewardVideoAutoAdShow,
     });
 }
 
+RCT_REMAP_METHOD(ATRewardVideoAutoAddPlacementId,
+                 addAutoLoadAdPlacementIDArray:(NSArray*)placementIDArray)
+{
+    [[ATRewardedVideoAutoAdManager sharedInstance] addAutoLoadAdPlacementIDArray:placementIDArray];
+}
+
+RCT_REMAP_METHOD(ATRewardVideoAutoRemovePlacementId,
+                 removeAutoLoadAdPlacementIDArray:(NSArray*)placementIDArray)
+{
+    [[ATRewardedVideoAutoAdManager sharedInstance] removeAutoLoadAdPlacementIDArray:placementIDArray];
+}
+
+RCT_REMAP_METHOD(ATRewardVideoAutoSetLocalExtra,
+                  rewardVideoAutoSetLocalExtra:(NSString *)placementID
+                  withExtra:(NSDictionary *)extra)
+{
+    [[ATRewardedVideoAutoAdManager sharedInstance]
+     setLocalExtra:extra
+     placementID:placementID
+    ];
+}
+
 // MARK:- ATAdLoadingDelegate
 - (void)didFailToLoadADWithPlacementID:(NSString *)placementID error:(NSError *)error { 
-    [self sendEventWithName: @"onRewardVideoAutoLoadFail" body: @{@"placementId": placementID, @"adError": error}];
+    [self sendEventWithName: @"onRewardVideoAutoLoadFail"
+                       body: @{
+        @"placementId": placementID,
+        @"adError": error
+    }];
 }
 
 - (void)didFinishLoadingADWithPlacementID:(NSString *)placementID { 
@@ -218,31 +244,60 @@ RCT_REMAP_METHOD(ATRewardVideoAutoAdShow,
 
 // MARK:- ATRewardedVideoDelegate
 - (void)rewardedVideoAgainDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayClicked"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoAgainDidEndPlayingForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayEnd"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoAgainDidFailToPlayForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayFailed"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra,
+        @"adError": error
+    }];
 }
 
 - (void)rewardedVideoAgainDidRewardSuccessForPlacemenID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onReward"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoAgainDidStartPlayingForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayStart"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayClicked"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoDidCloseForPlacementID:(NSString *)placementID rewarded:(BOOL)rewarded extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdClosed"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoDidDeepLinkOrJumpForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra result:(BOOL)success { 
@@ -250,19 +305,36 @@ RCT_REMAP_METHOD(ATRewardVideoAutoAdShow,
 }
 
 - (void)rewardedVideoDidEndPlayingForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayEnd"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoDidFailToPlayForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayFailed"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra,
+        @"adError": error
+    }];
 }
 
 - (void)rewardedVideoDidRewardSuccessForPlacemenID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onReward"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 - (void)rewardedVideoDidStartPlayingForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra { 
-    
+    [self sendEventWithName: @"onRewardedVideoAdPlayStart"
+                       body: @{
+        @"placementId": placementID,
+        @"atAdInfo": extra
+    }];
 }
 
 @end
