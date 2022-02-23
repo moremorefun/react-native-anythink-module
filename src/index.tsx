@@ -178,12 +178,12 @@ const AnythinkModuleBridge = {
     );
   },
 
-  ATSplashAdInit: function (
+  ATSplashAdInitAndLoad: function (
     placementId: string,
     fetchAdTimeout: number,
     defaultAdSourceConfig: string
   ) {
-    AnythinkModule.ATSplashAdInit(
+    AnythinkModule.ATSplashAdInitAndLoad(
       placementId,
       fetchAdTimeout,
       defaultAdSourceConfig

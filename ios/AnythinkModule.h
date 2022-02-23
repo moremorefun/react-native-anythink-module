@@ -3,8 +3,9 @@
 #import <AnyThinkSDK/AnyThinkSDK.h>
 #import <AnyThinkRewardedVideo/AnyThinkRewardedVideo.h>
 #import <AnyThinkInterstitial/AnyThinkInterstitial.h>
+#import <AnyThinkSplash/AnyThinkSplash.h>
 
-@interface AnythinkModule : RCTEventEmitter <RCTBridgeModule, ATAdLoadingDelegate, ATRewardedVideoDelegate, ATInterstitialDelegate>
+@interface AnythinkModule : RCTEventEmitter <RCTBridgeModule, ATAdLoadingDelegate, ATRewardedVideoDelegate, ATInterstitialDelegate, ATSplashDelegate>
 
 - (UIViewController *)topViewController;
 

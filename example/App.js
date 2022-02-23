@@ -38,6 +38,8 @@ const App: () => Node = () => {
   let rewardID = 'b61b16cfd7abae';
   let interID = 'b62023abcd0c9c';
   let splashID = 'b61c4951566e55';
+  let splashIDDefault =
+    '{"unit_id":1308102,"nw_firm_id":15,"adapter_class":"com.anythink.network.toutiao.TTATSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"dl_type\\":\\"0\\",\\"slot_id\\":\\"887668414\\",\\"personalized_template\\":\\"0\\",\\"zoomoutad_sw\\":\\"1\\",\\"app_id\\":\\"5261386\\"}"}';
   let bannerID = 'b62025d72e19ec';
   if (Platform.OS === 'ios') {
     appID = 'a61b166188a9b4';
@@ -45,6 +47,7 @@ const App: () => Node = () => {
     rewardID = 'b61b166324f190';
     interID = 'b6202409ac5c3d';
     splashID = 'b61c495138b4d6';
+    splashIDDefault = '';
     bannerID = 'b62025e3b119d8';
   }
 
@@ -70,7 +73,7 @@ const App: () => Node = () => {
             switch (type) {
               case 'onSplashAdShow':
                 // 展示开屏广告
-                AnythinkModuleBridge.ATSplashAdLoadAd(splashID);
+                AnythinkModuleBridge.ATSplashAdInitAndLoad(splashID, 5000, '');
                 break;
               case 'onBannerClose':
                 // 隐藏banner
@@ -82,12 +85,12 @@ const App: () => Node = () => {
       // // 加载广告
       AnythinkModuleBridge.ATRewardVideoAutoAdInit([rewardID]);
       AnythinkModuleBridge.ATInterstitialAutoAdInit([interID]);
-      // AnythinkModuleBridge.ATSplashAdInit(
-      //   splashID,
-      //   5000,
-      //   '{"unit_id":1308102,"nw_firm_id":15,"adapter_class":"com.anythink.network.toutiao.TTATSplashAdapter","content":"{\\"button_type\\":\\"0\\",\\"dl_type\\":\\"0\\",\\"slot_id\\":\\"887668414\\",\\"personalized_template\\":\\"0\\",\\"zoomoutad_sw\\":\\"1\\",\\"app_id\\":\\"5261386\\"}"}',
-      // );
-      // AnythinkModuleBridge.ATSplashAdLoadAd('b61c4951566e55');
+      AnythinkModuleBridge.ATSplashAdCheckSplashDefaultConfigList(splashID);
+      AnythinkModuleBridge.ATSplashAdInitAndLoad(
+        splashID,
+        5000,
+        splashIDDefault,
+      );
       // let wInPiexel = Dimensions.get('window').width * PixelRatio.get();
       // if (Platform.OS === 'ios') {
       //   wInPiexel = Dimensions.get('window').width;
@@ -98,7 +101,7 @@ const App: () => Node = () => {
       // });
       // AnythinkModuleBridge.ATBannerViewLoadAd('b62025d72e19ec');
     })();
-  }, [appID, appKey, bannerID, interID, rewardID, splashID]);
+  }, [appID, appKey, bannerID, interID, rewardID, splashID, splashIDDefault]);
 
   return (
     <SafeAreaView style={backgroundStyle}>

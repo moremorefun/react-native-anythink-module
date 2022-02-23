@@ -313,12 +313,115 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
     ];
 }
 
+RCT_REMAP_METHOD(ATSplashAdInitAndLoad,
+            loadSplashADWithPlacementID:
+            (NSString *) placementID
+            fetchAdTimeout:
+            (float) fetchAdTimeout
+            defaultAdSourceConfig:
+            (NSString *) defaultAdSourceConfig)
+{
+    NSDictionary *extra = @{
+            kATSplashExtraTolerateTimeoutKey: @(fetchAdTimeout / 1000.0)
+    };
+    [[ATAdManager sharedManager] loadADWithPlacementID:placementID
+                                                 extra:extra
+                                              delegate:self
+                                         containerView:nil
+                                 defaultAdSourceConfig:defaultAdSourceConfig
+    ];
+
+}
+
+RCT_REMAP_METHOD(ATSplashAdSetLocalExtra,
+            splashSetCustomData:
+            (NSString *) placementID
+            withExtra:
+            (NSDictionary *) extra)
+{
+    [[ATAPI sharedInstance] setCustomData:extra forPlacementID:placementID];
+}
+
+RCT_REMAP_METHOD(ATSplashAdIsAdReady,
+            splashReadyForPlacementID:
+            (NSString *) placementID
+            withResolver:
+            (RCTPromiseResolveBlock) resolve
+            withRejecter:
+            (RCTPromiseRejectBlock) reject)
+{
+    BOOL isReady = [[ATAdManager sharedManager] splashReadyForPlacementID:placementID];
+    NSNumber *boolNumber = [NSNumber numberWithBool:isReady];
+    resolve(boolNumber);
+}
+
+RCT_REMAP_METHOD(ATSplashAdCheckAdStatus,
+                 checkSplashLoadStatusForPlacementID:
+            (NSString *) placementID
+            withResolver:
+            (RCTPromiseResolveBlock) resolve
+            withRejecter:
+            (RCTPromiseRejectBlock) reject)
+{
+    ATCheckLoadModel *info = [[ATAdManager sharedManager] checkSplashLoadStatusForPlacementID:placementID];
+    resolve(@{
+            @"isLoading": [NSNumber numberWithBool:info.isLoading],
+            @"isReady": [NSNumber numberWithBool:info.isReady],
+            @"adInfo": info.adOfferInfo
+    });
+}
+
+RCT_REMAP_METHOD(ATSplashAdLoadAd,
+                 splashAdLoadAd:
+            (NSString *) placementID)
+{
+    [[ATAdManager sharedManager] loadADWithPlacementID:placementID extra:@{} delegate:self];
+}
+
+RCT_REMAP_METHOD(ATSplashAdShow,
+                 showSplashWithPlacementID:
+            (NSString *) placementID)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIWindow *mainWindow = nil;
+                if ( @available(iOS 13.0, *) ) {
+                    mainWindow = [UIApplication sharedApplication].windows.firstObject;
+                    [mainWindow makeKeyWindow];
+                }else {
+                    mainWindow = [UIApplication sharedApplication].keyWindow;
+                }
+        NSDictionary *extra = @{
+                    kATSplashExtraCountdownKey : @50000,
+                    kATSplashExtraCountdownIntervalKey : @500
+                };
+        [[ATAdManager sharedManager] showSplashWithPlacementID:placementID
+                                                        window:mainWindow
+                                                         extra:extra
+                                                      delegate:self
+        ];
+    });
+}
+
+RCT_REMAP_METHOD(ATSplashAdHide,
+                 hideSplashWithPlacementID:
+            (NSString *) placementID)
+{
+    
+}
+
+RCT_REMAP_METHOD(ATSplashAdCheckSplashDefaultConfigList,
+                 checkAdSourceList:
+            (NSString *) placementID)
+{
+    [[ATAdManager sharedManager] checkAdSourceList:placementID];
+}
+
 // MARK:- ATAdLoadingDelegate
 - (void)didFailToLoadADWithPlacementID:(NSString *)placementID error:(NSError *)error {
     [self sendEventWithName:@"onAdLoadFail"
                        body:@{
                                @"placementId": placementID,
-                               @"adError": error
+                               @"adError": error.description
                        }];
 }
 
@@ -328,11 +431,18 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
 
 
 - (void)didFinishLoadingSplashADWithPlacementID:(NSString *)placementID isTimeout:(BOOL)isTimeout {
-
+    [self sendEventWithName:@"onSplashAdLoaded"
+                       body:@{
+                               @"placementId": placementID,
+                               @"isTimeout": [NSNumber numberWithBool:isTimeout]
+                       }];
 }
 
 - (void)didTimeoutLoadingSplashADWithPlacementID:(NSString *)placementID {
-
+    [self sendEventWithName:@"onSplashAdLoadTimeout"
+                       body:@{
+                               @"placementId": placementID
+                       }];
 }
 
 // MARK:- ATRewardedVideoDelegate
@@ -357,7 +467,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        body:@{
                                @"placementId": placementID,
                                @"atAdInfo": extra,
-                               @"adError": error
+                               @"adError": error.description
                        }];
 }
 
@@ -410,7 +520,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        body:@{
                                @"placementId": placementID,
                                @"atAdInfo": extra,
-                               @"adError": error
+                               @"adError": error.description
                        }];
 }
 
@@ -464,7 +574,7 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        body:@{
                                @"placementId": placementID,
                                @"atAdInfo": extra,
-                               @"adError": error
+                               @"adError": error.description
                        }];
 }
 
@@ -489,8 +599,62 @@ RCT_REMAP_METHOD(ATInterstitialAutoAdSetLocalExtra,
                        body:@{
                                @"placementId": placementID,
                                @"atAdInfo": extra,
-                               @"adError": error
+                               @"adError": error.description
                        }];
+}
+
+// MARK:- ATSplashDelegate
+- (void)splashCountdownTime:(NSInteger)countdown forPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+
+}
+
+- (void)splashDeepLinkOrJumpForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra result:(BOOL)success {
+
+}
+
+- (void)splashDetailDidClosedForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+
+}
+
+- (void)splashDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onSplashAdClick"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)splashDidCloseForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onSplashAdDismiss"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)splashDidShowFailedForPlacementID:(NSString *)placementID error:(NSError *)error extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onSplashNoAdError"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra,
+                               @"adError": error.description,
+                       }];
+}
+
+- (void)splashDidShowForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+    [self sendEventWithName:@"onSplashAdShow"
+                       body:@{
+                               @"placementId": placementID,
+                               @"atAdInfo": extra
+                       }];
+}
+
+- (void)splashZoomOutViewDidClickForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+
+}
+
+- (void)splashZoomOutViewDidCloseForPlacementID:(NSString *)placementID extra:(NSDictionary *)extra {
+
 }
 
 @end

@@ -508,7 +508,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void ATSplashAdInit(String placementId, int fetchAdTimeout, String defaultAdSourceConfig) {
+  public void ATSplashAdInitAndLoad(String placementId, int fetchAdTimeout, String defaultAdSourceConfig) {
     if (!aTSplashAdMap.containsKey(placementId)) {
       ATSplashAd ad = new ATSplashAd(
         AnythinkModuleModule.this.getReactApplicationContext(),
@@ -602,6 +602,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
       );
       aTSplashAdMap.put(placementId, ad);
     }
+    ATSplashAdLoadAd(placementId);
   }
 
   @ReactMethod
