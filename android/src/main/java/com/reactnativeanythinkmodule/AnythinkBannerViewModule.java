@@ -1,7 +1,6 @@
 package com.reactnativeanythinkmodule;
 
 import android.util.Log;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -29,15 +28,7 @@ public class AnythinkBannerViewModule extends SimpleViewManager<AnythinkBannerFL
   @NonNull
   @Override
   protected AnythinkBannerFL createViewInstance(@NonNull ThemedReactContext reactContext) {
-    AnythinkBannerFL fl = new AnythinkBannerFL(reactContext);
-    fl.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-      @Override
-      public void onGlobalLayout() {
-          Log.i(REACT_CLASS, "OnGlobalLayoutListener width:" + fl.getWidth() + " height: " + fl.getHeight() );
-          Log.i(REACT_CLASS, "OnGlobalLayoutListener measuredWidth:" + fl.getMeasuredWidth() + " measuredHeight: " + fl.getMeasuredHeight() );
-        };
-    });
-    return fl;
+    return new AnythinkBannerFL(reactContext);
   }
 
   @ReactProp(name = "placementID")
