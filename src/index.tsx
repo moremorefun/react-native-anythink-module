@@ -257,5 +257,5 @@ const AnythinkModuleBridge = {
 
 export default AnythinkModuleBridge;
 
-const AnythinkView = requireNativeComponent('AnythinkView');
-export { AnythinkView };
+const AnythinkBannerView = requireNativeComponent('AnythinkBannerView');
+export { AnythinkBannerView };

@@ -11,11 +11,11 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-public class AnythinkViewModule extends SimpleViewManager<FrameLayout> {
-  public static final String REACT_CLASS = "AnythinkView";
+public class AnythinkBannerViewModule extends SimpleViewManager<FrameLayout> {
+  public static final String REACT_CLASS = "AnythinkBannerView";
   ReactApplicationContext mCallerContext;
 
-  public AnythinkViewModule(ReactApplicationContext reactContext) {
+  public AnythinkBannerViewModule(ReactApplicationContext reactContext) {
     mCallerContext = reactContext;
   }
 
