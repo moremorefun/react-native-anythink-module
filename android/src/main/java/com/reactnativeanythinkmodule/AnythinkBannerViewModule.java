@@ -8,13 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.uimanager.annotations.ReactPropGroup;
 
-public class AnythinkBannerViewModule extends SimpleViewManager<FrameLayout> {
+public class AnythinkBannerViewModule extends SimpleViewManager<AnythinkBannerFL> {
   public static final String REACT_CLASS = "AnythinkBannerView";
   ReactApplicationContext mCallerContext;
 
@@ -30,8 +28,8 @@ public class AnythinkBannerViewModule extends SimpleViewManager<FrameLayout> {
 
   @NonNull
   @Override
-  protected FrameLayout createViewInstance(@NonNull ThemedReactContext reactContext) {
-    FrameLayout fl = new FrameLayout(reactContext);
+  protected AnythinkBannerFL createViewInstance(@NonNull ThemedReactContext reactContext) {
+    AnythinkBannerFL fl = new AnythinkBannerFL(reactContext);
     fl.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override
       public void onGlobalLayout() {
@@ -58,12 +56,12 @@ public class AnythinkBannerViewModule extends SimpleViewManager<FrameLayout> {
   }
 
   @Override
-  public void onDropViewInstance(@NonNull FrameLayout view) {
+  public void onDropViewInstance(@NonNull AnythinkBannerFL view) {
     super.onDropViewInstance(view);
   }
 
   @Override
-  protected void onAfterUpdateTransaction(@NonNull FrameLayout view) {
+  protected void onAfterUpdateTransaction(@NonNull AnythinkBannerFL view) {
     super.onAfterUpdateTransaction(view);
     Log.i(REACT_CLASS, "onAfterUpdateTransaction width:" + view.getWidth() + " height: " + view.getHeight() );
     Log.i(REACT_CLASS, "onAfterUpdateTransaction measuredWidth:" + view.getMeasuredWidth() + " measuredHeight: " + view.getMeasuredHeight() );
