@@ -3,6 +3,8 @@ import {
   NativeModules,
   Platform,
   requireNativeComponent,
+  UIManager,
+  ViewStyle,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -257,5 +259,16 @@ const AnythinkModuleBridge = {
 
 export default AnythinkModuleBridge;
 
-const AnythinkBannerView = requireNativeComponent('AnythinkBannerView');
+type AnythinkBannerViewProps = {
+  width: number;
+  height: number;
+  placementID: string;
+  style: ViewStyle;
+};
+const AnythinkBannerView =
+  UIManager.getViewManagerConfig('AnythinkBannerView') != null
+    ? requireNativeComponent<AnythinkBannerViewProps>('AnythinkBannerView')
+    : () => {
+        throw new Error(LINKING_ERROR);
+      };
 export { AnythinkBannerView };
