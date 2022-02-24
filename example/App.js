@@ -24,7 +24,7 @@ import {
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import AnythinkView, {AnythinkModuleBridge} from 'react-native-anythink-module';
+import AnythinkModuleBridge from 'react-native-anythink-module';
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -53,7 +53,6 @@ const App: () => Node = () => {
   }
 
   useEffect(() => {
-    console.log('AnythinkView', AnythinkView, 'ok');
     (async () => {
       if (__DEV__) {
         // 设置为debug模式
@@ -109,15 +108,6 @@ const App: () => Node = () => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView>
-        <>
-          <AnythinkView
-            style={{
-              width: 100,
-              height: 100,
-              backgroundColor: 'red',
-            }}
-          />
-        </>
         <View style={styles.button}>
           <Button
             title="激励视频"
