@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, requireNativeComponent } from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-anythink-module' doesn't seem to be linked. Make sure: \n\n` +
@@ -248,3 +248,6 @@ const AnythinkModuleBridge = {
 };
 
 export default AnythinkModuleBridge;
+
+const AnythinkView = requireNativeComponent('AnythinkView');
+export { AnythinkView };

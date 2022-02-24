@@ -31,7 +31,4 @@ public class AnythinkViewModule extends SimpleViewManager<FrameLayout> {
     return new FrameLayout(reactContext);
   }
 
-  @ReactProp(name = "src")
-  public void setSrc(FrameLayout view, @Nullable ReadableArray sources) {
-  }
 }
