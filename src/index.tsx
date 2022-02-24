@@ -1,4 +1,9 @@
-import { NativeModules, Platform, requireNativeComponent } from 'react-native';
+import {
+  NativeEventEmitter,
+  NativeModules,
+  Platform,
+  requireNativeComponent,
+} from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-anythink-module' doesn't seem to be linked. Make sure: \n\n` +
@@ -20,10 +25,13 @@ const AnythinkModule = NativeModules.AnythinkModule
 const listenersMap: Map<string, any> = new Map<string, any>();
 
 const AnythinkModuleBridge = {
-  setListeners: function (
-    emitter: any,
-    cb: (event: string, data: any) => void
-  ) {
+  setListeners: function (cb: (event: string, data: any) => void) {
+    if (!NativeModules.AnythinkModule) {
+      return;
+    }
+    const AnythinkModuleEventEmitter = new NativeEventEmitter(
+      NativeModules.AnythinkModule
+    );
     function add(type: string) {
       if (listenersMap.has(type)) {
         const listener = listenersMap.get(type);
@@ -32,7 +40,7 @@ const AnythinkModuleBridge = {
       }
       listenersMap.set(
         type,
-        emitter.addListener(type, (args: any) => {
+        AnythinkModuleEventEmitter.addListener(type, (args: any) => {
           cb(type, args);
         })
       );
