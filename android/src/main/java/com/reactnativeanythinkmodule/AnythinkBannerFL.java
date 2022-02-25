@@ -1,11 +1,21 @@
 package com.reactnativeanythinkmodule;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.FrameLayout;
 
+import com.anythink.banner.api.ATBannerView;
+import com.facebook.react.bridge.ReactApplicationContext;
+
 public class AnythinkBannerFL extends FrameLayout {
-  public AnythinkBannerFL( Context context) {
+  ATBannerView mBannerView;
+
+  public AnythinkBannerFL( Context context, ReactApplicationContext mCallerContext) {
     super(context);
+    mBannerView = new ATBannerView(mCallerContext.getCurrentActivity());
+    mBannerView.setPlacementId("b62025d72e19ec");
+    this.addView(mBannerView);
+    mBannerView.loadAd();
   }
 
   @Override

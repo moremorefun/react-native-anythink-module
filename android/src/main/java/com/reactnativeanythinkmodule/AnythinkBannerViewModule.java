@@ -28,7 +28,7 @@ public class AnythinkBannerViewModule extends SimpleViewManager<AnythinkBannerFL
   @NonNull
   @Override
   protected AnythinkBannerFL createViewInstance(@NonNull ThemedReactContext reactContext) {
-    return new AnythinkBannerFL(reactContext);
+    return new AnythinkBannerFL(reactContext, mCallerContext);
   }
 
   @ReactProp(name = "placementID")
