@@ -32,13 +32,14 @@ public class AnythinkBannerViewModule extends SimpleViewManager<AnythinkBannerFL
   }
 
   @ReactProp(name = "placementID")
-  public void setPlacementID(FrameLayout view, @Nullable String placementID) {
-
+  public void setPlacementID(AnythinkBannerFL view, @Nullable String placementID) {
+    view.setPlacementID(placementID);
   }
 
   @Override
   public void onDropViewInstance(@NonNull AnythinkBannerFL view) {
     super.onDropViewInstance(view);
+    view.destroy();
   }
 
 }

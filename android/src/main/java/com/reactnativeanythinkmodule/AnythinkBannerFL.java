@@ -15,24 +15,29 @@ import com.anythink.core.api.AdError;
 import com.facebook.react.bridge.ReactApplicationContext;
 
 public class AnythinkBannerFL extends FrameLayout {
+  ReactApplicationContext mCallerContext;
   ATBannerView mBannerView;
 
   public AnythinkBannerFL( Context context, ReactApplicationContext mCallerContext) {
     super(context);
+    this.mCallerContext = mCallerContext;
+  }
+
+  public void setPlacementID(@Nullable String placementID) {
+    this.removeAllViews();
+    if (mBannerView != null) {
+      mBannerView.destroy();
+      mBannerView = null;
+    }
     mBannerView = new BannerViewWrapper(mCallerContext.getCurrentActivity());
     mBannerView.setLayoutParams(new FrameLayout.LayoutParams(
       ViewGroup.LayoutParams.MATCH_PARENT,
       ViewGroup.LayoutParams.MATCH_PARENT
     ));
-    mBannerView.setPlacementId("b62025d72e19ec");
-    mBannerView.setBackgroundColor(0xFF00FF00);
-    this.addView(mBannerView);
-
     mBannerView.setBannerAdListener(new ATBannerListener() {
       @Override
       public void onBannerLoaded() {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerLoaded");
-        mBannerView.setBackgroundColor(0xFF0000FF);
       }
 
       @Override
@@ -65,10 +70,17 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerAutoRefreshFail:" + adError);
       }
     });
+    this.addView(mBannerView);
+
+    mBannerView.setPlacementId(placementID);
     mBannerView.loadAd();
   }
 
-  public void setPlacementID(@Nullable String placementID) {
-    mBannerView.setPlacementId(placementID);
+  public void destroy(){
+    this.removeAllViews();
+    if (mBannerView != null) {
+      mBannerView.destroy();
+      mBannerView = null;
+    }
   }
 }
