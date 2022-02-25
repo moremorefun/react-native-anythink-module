@@ -19,7 +19,7 @@ public class AnythinkBannerFL extends FrameLayout {
     super(context);
     mBannerView = new ATBannerView(mCallerContext.getCurrentActivity());
     mBannerView.setLayoutParams(new FrameLayout.LayoutParams(
-      ViewGroup.LayoutParams.MATCH_PARENT,
+      300,
       ViewGroup.LayoutParams.MATCH_PARENT
     ));
     mBannerView.setPlacementId("b62025d72e19ec");
