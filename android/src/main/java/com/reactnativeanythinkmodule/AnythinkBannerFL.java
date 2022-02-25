@@ -23,6 +23,7 @@ public class AnythinkBannerFL extends FrameLayout {
       90
     ));
     mBannerView.setPlacementId("b62025d72e19ec");
+    mBannerView.setBackgroundColor(0xFF00FF00);
     this.addView(mBannerView);
 
     mBannerView.setBannerAdListener(new ATBannerListener() {
