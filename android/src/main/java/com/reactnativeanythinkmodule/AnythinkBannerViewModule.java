@@ -36,25 +36,9 @@ public class AnythinkBannerViewModule extends SimpleViewManager<AnythinkBannerFL
 
   }
 
-  @ReactProp(name = "width")
-  public void setWidth(FrameLayout view, float width) {
-
-  }
-
-  @ReactProp(name = "height")
-  public void setHeight(FrameLayout view, float height) {
-
-  }
-
   @Override
   public void onDropViewInstance(@NonNull AnythinkBannerFL view) {
     super.onDropViewInstance(view);
   }
 
-  @Override
-  protected void onAfterUpdateTransaction(@NonNull AnythinkBannerFL view) {
-    super.onAfterUpdateTransaction(view);
-    Log.i(REACT_CLASS, "onAfterUpdateTransaction width:" + view.getWidth() + " height: " + view.getHeight() );
-    Log.i(REACT_CLASS, "onAfterUpdateTransaction measuredWidth:" + view.getMeasuredWidth() + " measuredHeight: " + view.getMeasuredHeight() );
-  }
 }

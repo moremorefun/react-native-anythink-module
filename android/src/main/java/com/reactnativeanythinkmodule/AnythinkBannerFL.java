@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Nullable;
+
 import com.anythink.banner.api.ATBannerListener;
 import com.anythink.banner.api.ATBannerView;
 import com.anythink.core.api.ATAdInfo;
@@ -17,10 +19,10 @@ public class AnythinkBannerFL extends FrameLayout {
 
   public AnythinkBannerFL( Context context, ReactApplicationContext mCallerContext) {
     super(context);
-    mBannerView = new ATBannerView(mCallerContext.getCurrentActivity());
+    mBannerView = new BannerViewWrapper(mCallerContext.getCurrentActivity());
     mBannerView.setLayoutParams(new FrameLayout.LayoutParams(
-      1080,
-      162
+      ViewGroup.LayoutParams.MATCH_PARENT,
+      ViewGroup.LayoutParams.MATCH_PARENT
     ));
     mBannerView.setPlacementId("b62025d72e19ec");
     mBannerView.setBackgroundColor(0xFF00FF00);
@@ -30,7 +32,7 @@ public class AnythinkBannerFL extends FrameLayout {
       @Override
       public void onBannerLoaded() {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerLoaded");
-        AnythinkBannerFL.this.onLoaded();
+        mBannerView.setBackgroundColor(0xFF0000FF);
       }
 
       @Override
@@ -63,22 +65,10 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerAutoRefreshFail:" + adError);
       }
     });
-
     mBannerView.loadAd();
   }
 
-  @Override
-  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    super.onLayout(changed, left, top, right, bottom);
-//    mBannerView.setLayoutParams(new FrameLayout.LayoutParams(
-//      getWidth(),
-//      getHeight()
-//    ));
-//    Log.i("AnythinkBannerView", "InView OnGlobalLayoutListener width:" + getWidth() + " height: " + getHeight() );
-//    Log.i("AnythinkBannerView", "InView OnGlobalLayoutListener measuredWidth:" + getMeasuredWidth() + " measuredHeight: " + getMeasuredHeight() );
-  }
-
-  public void onLoaded() {
-    mBannerView.setBackgroundColor(0xFF0000FF);
+  public void setPlacementID(@Nullable String placementID) {
+    mBannerView.setPlacementId(placementID);
   }
 }
