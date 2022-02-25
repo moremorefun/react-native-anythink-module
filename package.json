@@ -1,6 +1,6 @@
 {
   "name": "react-native-anythink-module",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "topon-anythink",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
