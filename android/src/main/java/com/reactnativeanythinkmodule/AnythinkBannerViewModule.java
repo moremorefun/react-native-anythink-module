@@ -1,7 +1,5 @@
 package com.reactnativeanythinkmodule;
 
-import android.util.Log;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

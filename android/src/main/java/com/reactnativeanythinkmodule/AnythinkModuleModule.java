@@ -319,7 +319,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public void ATRewardVideoAutoAddPlacementId(ReadableArray placementIds) {
     String[] ids = convertToStrings(placementIds);
     if (ids.length == 0) {
-      Log.e(NAME, "ATRewardVideoAutoAddPlacementId id size 0: " + placementIds.toString());
+      Log.e(NAME, "ATRewardVideoAutoAddPlacementId id size 0: " + placementIds);
       return;
     }
     ATRewardVideoAutoAd.addPlacementId(ids);
@@ -329,7 +329,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public void ATRewardVideoAutoRemovePlacementId(ReadableArray placementIds) {
     String[] ids = convertToStrings(placementIds);
     if (ids.length == 0) {
-      Log.e(NAME, "ATRewardVideoAutoRemovePlacementId id size 0: " + placementIds.toString());
+      Log.e(NAME, "ATRewardVideoAutoRemovePlacementId id size 0: " + placementIds);
       return;
     }
     ATRewardVideoAutoAd.removePlacementId(ids);
@@ -344,7 +344,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public void ATInterstitialAutoAdInit(ReadableArray placementIds) {
     String[] ids = convertToStrings(placementIds);
     if (ids.length == 0) {
-      Log.e(NAME, "ATInterstitialAutoAdInit id size 0: " + placementIds.toString());
+      Log.e(NAME, "ATInterstitialAutoAdInit id size 0: " + placementIds);
       return;
     }
     ATInterstitialAutoAd.init(this.getReactApplicationContext(), ids, new ATInterstitialAutoLoadListener() {
@@ -486,7 +486,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public void ATInterstitialAutoAdAddPlacementId(ReadableArray placementIds) {
     String[] ids = convertToStrings(placementIds);
     if (ids.length == 0) {
-      Log.e(NAME, "ATInterstitialAutoAdAddPlacementId id size 0: " + placementIds.toString());
+      Log.e(NAME, "ATInterstitialAutoAdAddPlacementId id size 0: " + placementIds);
       return;
     }
     ATInterstitialAutoAd.addPlacementId(ids);
@@ -496,7 +496,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
   public void ATInterstitialAutoAdRemovePlacementId(ReadableArray placementIds) {
     String[] ids = convertToStrings(placementIds);
     if (ids.length == 0) {
-      Log.e(NAME, "ATInterstitialAutoAdAddPlacementId id size 0: " + placementIds.toString());
+      Log.e(NAME, "ATInterstitialAutoAdAddPlacementId id size 0: " + placementIds);
       return;
     }
     ATInterstitialAutoAd.removePlacementId(ids);
@@ -882,7 +882,7 @@ public class AnythinkModuleModule extends ReactContextBaseJavaModule {
         }
       } catch (Throwable e) {
         e.printStackTrace();
-        Log.e(NAME, "ATBannerViewInit err: " + e.toString());
+        Log.e(NAME, "ATBannerViewInit err: " + e);
       }
       aTBannerViewMap.put(placementId, helper);
     }

@@ -1,7 +1,5 @@
 package com.reactnativeanythinkmodule;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -16,7 +14,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.facebook.react.uimanager.events.RCTModernEventEmitter;
 
 public class AnythinkBannerFL extends FrameLayout {
   ReactApplicationContext mCallerContext;
@@ -46,7 +44,8 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerLoaded");
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerLoaded");
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
@@ -58,7 +57,8 @@ public class AnythinkBannerFL extends FrameLayout {
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerFailed");
         event.putString("adError", adError.toString());
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
@@ -70,7 +70,8 @@ public class AnythinkBannerFL extends FrameLayout {
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerClicked");
         event.putString("atAdInfo", atAdInfo.toString());
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
@@ -82,7 +83,8 @@ public class AnythinkBannerFL extends FrameLayout {
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerShow");
         event.putString("atAdInfo", atAdInfo.toString());
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
@@ -94,7 +96,8 @@ public class AnythinkBannerFL extends FrameLayout {
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerClose");
         event.putString("atAdInfo", atAdInfo.toString());
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
@@ -106,7 +109,8 @@ public class AnythinkBannerFL extends FrameLayout {
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerAutoRefreshed");
         event.putString("atAdInfo", atAdInfo.toString());
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
@@ -118,7 +122,8 @@ public class AnythinkBannerFL extends FrameLayout {
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerAutoRefreshFail");
         event.putString("adError", adError.toString());
-        mContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+        mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
+          mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
           "onEvent",
           event);
