@@ -30,6 +30,7 @@ public class AnythinkBannerFL extends FrameLayout {
       @Override
       public void onBannerLoaded() {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerLoaded");
+        AnythinkBannerFL.this.onLoaded();
       }
 
       @Override
@@ -75,5 +76,9 @@ public class AnythinkBannerFL extends FrameLayout {
 //    ));
 //    Log.i("AnythinkBannerView", "InView OnGlobalLayoutListener width:" + getWidth() + " height: " + getHeight() );
 //    Log.i("AnythinkBannerView", "InView OnGlobalLayoutListener measuredWidth:" + getMeasuredWidth() + " measuredHeight: " + getMeasuredHeight() );
+  }
+
+  public void onLoaded() {
+    mBannerView.setBackgroundColor(0xFF0000FF);
   }
 }
