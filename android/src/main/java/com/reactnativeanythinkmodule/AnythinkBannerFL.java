@@ -19,8 +19,8 @@ public class AnythinkBannerFL extends FrameLayout {
     super(context);
     mBannerView = new ATBannerView(mCallerContext.getCurrentActivity());
     mBannerView.setLayoutParams(new FrameLayout.LayoutParams(
-      ViewGroup.LayoutParams.WRAP_CONTENT,
-      ViewGroup.LayoutParams.WRAP_CONTENT
+      ViewGroup.LayoutParams.MATCH_PARENT,
+      ViewGroup.LayoutParams.MATCH_PARENT
     ));
     mBannerView.setPlacementId("b62025d72e19ec");
     this.addView(mBannerView);
@@ -68,6 +68,10 @@ public class AnythinkBannerFL extends FrameLayout {
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
+//    mBannerView.setLayoutParams(new FrameLayout.LayoutParams(
+//      getWidth(),
+//      getHeight()
+//    ));
 //    Log.i("AnythinkBannerView", "InView OnGlobalLayoutListener width:" + getWidth() + " height: " + getHeight() );
 //    Log.i("AnythinkBannerView", "InView OnGlobalLayoutListener measuredWidth:" + getMeasuredWidth() + " measuredHeight: " + getMeasuredHeight() );
   }
