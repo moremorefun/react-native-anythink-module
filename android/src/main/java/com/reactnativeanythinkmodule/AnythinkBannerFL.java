@@ -44,6 +44,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerLoaded");
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerLoaded");
+        event.putString("placementID", placementID);
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
           AnythinkBannerFL.this.getId(),
@@ -56,6 +57,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerFailed:" + adError);
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerFailed");
+        event.putString("placementID", placementID);
         event.putString("adError", adError.toString());
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
@@ -69,6 +71,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerClicked:" + atAdInfo);
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerClicked");
+        event.putString("placementID", placementID);
         event.putString("atAdInfo", atAdInfo.toString());
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
@@ -82,6 +85,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerShow:" + atAdInfo);
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerShow");
+        event.putString("placementID", placementID);
         event.putString("atAdInfo", atAdInfo.toString());
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
@@ -95,6 +99,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerClose:" + atAdInfo);
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerClose");
+        event.putString("placementID", placementID);
         event.putString("atAdInfo", atAdInfo.toString());
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
@@ -108,6 +113,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerAutoRefreshed:" + atAdInfo);
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerAutoRefreshed");
+        event.putString("placementID", placementID);
         event.putString("atAdInfo", atAdInfo.toString());
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
@@ -121,6 +127,7 @@ public class AnythinkBannerFL extends FrameLayout {
         Log.i("AnythinkBannerView", "AnythinkBannerFL onBannerAutoRefreshFail:" + adError);
         WritableMap event = Arguments.createMap();
         event.putString("type", "onBannerAutoRefreshFail");
+        event.putString("placementID", placementID);
         event.putString("adError", adError.toString());
         mContext.getJSModule(RCTModernEventEmitter.class).receiveEvent(
           mContext.getSurfaceId(),
