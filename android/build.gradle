@@ -67,5 +67,18 @@ dependencies {
     implementation 'com.android.support:localbroadcastmanager:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    api fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    implementation(name: 'Baidu_MobAds_SDK-release_v9.183', ext: 'aar')
+    implementation(name: 'GDTSDK.unionNormal.4.441.1311', ext: 'aar')
+    implementation(name: 'anythink_banner', ext: 'aar')
+    implementation(name: 'anythink_china_core', ext: 'aar')
+    implementation(name: 'anythink_core', ext: 'aar')
+    implementation(name: 'anythink_interstitial', ext: 'aar')
+    implementation(name: 'anythink_native', ext: 'aar')
+    implementation(name: 'anythink_network_baidu', ext: 'aar')
+    implementation(name: 'anythink_network_gdt', ext: 'aar')
+    implementation(name: 'anythink_network_pangle_china', ext: 'aar')
+    implementation(name: 'anythink_rewardvideo', ext: 'aar')
+    implementation(name: 'anythink_splash', ext: 'aar')
+    implementation(name: 'open_ad_sdk_4.2.5.2', ext: 'aar')
+    implementation(name: 'tramini_sdk', ext: 'aar')
 }
